@@ -1066,7 +1066,7 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
                                 <SelectItem value="exceeds">Exceeds Expectations (>90%)</SelectItem>
                                 <SelectItem value="meets">Meets Expectations (85-90%)</SelectItem>
                                 <SelectItem value="approaching">Approaching Expectations (75-84%)</SelectItem>
-                                <SelectItem value="below">Below Expectations (<75%)</SelectItem>
+                                <SelectItem value="below">Below Expectations (&lt;75%)</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
