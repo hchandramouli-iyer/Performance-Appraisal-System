@@ -291,58 +291,95 @@ function EvaluationForm() {
             <div className="card__body">
               {/* Overview Tab */}
               <TabsContent value="overview" data-testid="overview-content" className="space-y-6">
-                <div>
-                  <h3 className="h3 mb-4">Evaluation Overview</h3>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <Card className="card p-4">
-                      <div className="text-center">
-                        <div className="metric">
-                          {evaluationData.competencies.length > 0 
-                            ? (evaluationData.competencies.reduce((sum, comp) => sum + comp.score, 0) / evaluationData.competencies.length).toFixed(1)
-                            : '0.0'
-                          }
-                        </div>
-                        <p className="body-sm text-[color:var(--text-secondary)]">Avg Competency Score</p>
+                <div className="grid lg:grid-cols-2 gap-8">
+                  {/* Left Column - Metrics */}
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="h3 mb-4">Evaluation Metrics</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <Card className="card p-4">
+                          <div className="text-center">
+                            <div className="metric">
+                              {evaluationData.competencies.length > 0 
+                                ? (evaluationData.competencies.reduce((sum, comp) => sum + comp.score, 0) / evaluationData.competencies.length).toFixed(1)
+                                : '0.0'
+                              }
+                            </div>
+                            <p className="body-sm text-[color:var(--text-secondary)]">Avg Competency Score</p>
+                          </div>
+                        </Card>
+                        <Card className="card p-4">
+                          <div className="text-center">
+                            <div className="metric">{evaluationData.idp.goals?.length || 0}</div>
+                            <p className="body-sm text-[color:var(--text-secondary)]">IDP Goals</p>
+                          </div>
+                        </Card>
+                        <Card className="card p-4">
+                          <div className="text-center">
+                            <div className="metric">{evaluationData.certifications?.length || 0}</div>
+                            <p className="body-sm text-[color:var(--text-secondary)]">Certifications</p>
+                          </div>
+                        </Card>
+                        <Card className="card p-4">
+                          <div className="text-center">
+                            <div className={`metric ${
+                              evaluationData.talent_assessment?.overall === 'excellent' ? 'text-[color:var(--accent-success)]' :
+                              evaluationData.talent_assessment?.overall === 'good' ? 'text-[color:var(--accent-success)]' :
+                              evaluationData.talent_assessment?.overall === 'developing' ? 'text-[color:var(--accent-warning)]' :
+                              'text-[color:var(--text-secondary)]'
+                            }`}>
+                              {evaluationData.talent_assessment?.overall?.toUpperCase() || 'TBD'}
+                            </div>
+                            <p className="body-sm text-[color:var(--text-secondary)]">Overall Rating</p>
+                          </div>
+                        </Card>
                       </div>
-                    </Card>
-                    <Card className="card p-4">
-                      <div className="text-center">
-                        <div className="metric">{evaluationData.idp.goals?.length || 0}</div>
-                        <p className="body-sm text-[color:var(--text-secondary)]">IDP Goals</p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="h4 mb-3">Progress Summary</h4>
+                      <div className="space-y-3">
+                        {[
+                          { section: "Competencies", completed: evaluationData.competencies.filter(c => c.evidence).length, total: evaluationData.competencies.length },
+                          { section: "IDP Goals", completed: evaluationData.idp.goals?.length || 0, total: "As needed" },
+                          { section: "PM Feedback", completed: evaluationData.pm_feedback.comments ? 1 : 0, total: 1 },
+                          { section: "Role Fit Analysis", completed: evaluationData.role_fit.current_role && evaluationData.role_fit.next_role ? 1 : 0, total: 1 }
+                        ].map((item, index) => (
+                          <div key={index} className="flex items-center justify-between py-2 border-b border-[var(--border-light)] last:border-b-0">
+                            <span className="body-md">{item.section}</span>
+                            <div className="flex items-center gap-2">
+                              {typeof item.total === 'number' && item.completed === item.total ? (
+                                <CheckCircle size={16} className="text-[color:var(--accent-success)]" />
+                              ) : null}
+                              <span className="body-sm text-[color:var(--text-secondary)]">
+                                {item.completed} / {item.total}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </Card>
-                    <Card className="card p-4">
-                      <div className="text-center">
-                        <div className="metric">{evaluationData.certifications?.length || 0}</div>
-                        <p className="body-sm text-[color:var(--text-secondary)]">Certifications</p>
-                      </div>
-                    </Card>
+                    </div>
                   </div>
-                </div>
-                
-                <Separator />
-                
-                <div>
-                  <h4 className="h4 mb-3">Progress Summary</h4>
-                  <div className="space-y-3">
-                    {[
-                      { section: "Competencies", completed: evaluationData.competencies.filter(c => c.evidence).length, total: evaluationData.competencies.length },
-                      { section: "IDP Goals", completed: evaluationData.idp.goals?.length || 0, total: "As needed" },
-                      { section: "PM Feedback", completed: evaluationData.pm_feedback.comments ? 1 : 0, total: 1 },
-                      { section: "Role Fit Analysis", completed: evaluationData.role_fit.current_role && evaluationData.role_fit.next_role ? 1 : 0, total: 1 }
-                    ].map((item, index) => (
-                      <div key={index} className="flex items-center justify-between py-2 border-b border-[var(--border-light)] last:border-b-0">
-                        <span className="body-md">{item.section}</span>
-                        <div className="flex items-center gap-2">
-                          {typeof item.total === 'number' && item.completed === item.total ? (
-                            <CheckCircle size={16} className="text-[color:var(--accent-success)]" />
-                          ) : null}
-                          <span className="body-sm text-[color:var(--text-secondary)]">
-                            {item.completed} / {item.total}
-                          </span>
-                        </div>
+                  
+                  {/* Right Column - Competency Chart */}
+                  <div>
+                    <h3 className="h3 mb-4">Competency Profile</h3>
+                    <Card className="card">
+                      <div className="card__body">
+                        {evaluationData.competencies.length > 0 ? (
+                          <CompetencyRadarChart competencies={evaluationData.competencies} />
+                        ) : (
+                          <div className="flex items-center justify-center h-64">
+                            <div className="text-center">
+                              <Brain size={48} className="mx-auto text-[color:var(--text-muted)] mb-4" />
+                              <p className="body-sm text-[color:var(--text-muted)]">
+                                Complete competency scores to see visual analysis
+                              </p>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    ))}
+                    </Card>
                   </div>
                 </div>
               </TabsContent>
