@@ -177,23 +177,40 @@ function ReportView() {
           <div className="card__header">
             <h3 className="h3">Competency Analysis</h3>
           </div>
-          <div className="card__body space-y-4">
-            {evaluation?.competencies?.map((competency, index) => (
-              <div key={competency.key} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="h4">{competency.name}</h4>
-                  <Badge variant={competency.score >= 4 ? 'default' : competency.score >= 3 ? 'secondary' : 'destructive'}>
-                    {competency.score}/5
-                  </Badge>
+          <div className="card__body">
+            {evaluation?.competencies?.length > 0 ? (
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Radar Chart */}
+                <div>
+                  <h4 className="h4 mb-4">Competency Profile</h4>
+                  <CompetencyRadarChart 
+                    competencies={evaluation.competencies} 
+                    className="bg-[color:var(--bg-section)] rounded-[var(--radius-md)] p-4"
+                  />
                 </div>
-                <Progress value={(competency.score / 5) * 100} className="w-full" />
-                {competency.evidence && (
-                  <p className="body-sm text-[color:var(--text-secondary)] pl-4 border-l-2 border-[var(--border-light)]">
-                    {competency.evidence}
-                  </p>
-                )}
+                
+                {/* Detailed Scores */}
+                <div className="space-y-4">
+                  <h4 className="h4 mb-4">Detailed Scores</h4>
+                  {evaluation.competencies.map((competency, index) => (
+                    <div key={competency.key} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h5 className="body-md font-medium">{competency.name}</h5>
+                        <Badge variant={competency.score >= 4 ? 'default' : competency.score >= 3 ? 'secondary' : 'destructive'}>
+                          {competency.score}/5
+                        </Badge>
+                      </div>
+                      <Progress value={(competency.score / 5) * 100} className="w-full" />
+                      {competency.evidence && (
+                        <p className="body-sm text-[color:var(--text-secondary)] pl-4 border-l-2 border-[var(--border-light)] mt-2">
+                          {competency.evidence}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-            )) || (
+            ) : (
               <p className="body-md text-[color:var(--text-muted)]">No competency data available.</p>
             )}
           </div>
