@@ -1,0 +1,141 @@
+<analysis>
+The AI engineer initiated the development of a Performance Appraisal System. After receiving the initial product requirements and supporting PDF documents, the engineer clarified critical technical aspects with the user, including AI integration (Emergent LLM), user management (single manager, multiple mentees), data storage (MongoDB for evaluations, on-demand reports), and report format (PDF and web-based). The engineer then performed an initial environment exploration and thoroughly analyzed the provided PDF artifacts to understand success profiles and talent assessment processes. The current state is focused on gathering foundational information before proceeding to design and implementation, with the next logical step being to retrieve design guidelines.
+</analysis>
+
+<product_requirements>
+The user requires a comprehensive Performance Appraisal System to analyze and generate reports on mentee performance. The system must incorporate several data points for evaluation:
+1.  **Individual Development Plan (IDP)**
+2.  **Rubric**
+3.  **Role Level EBR**
+4.  **Certifications:** Completed or committed.
+5.  **Current and Next Role Fit Analysis.**
+6.  **Success Profile:** Based on provided documents for Engineer, Practice Architect, and Team Lead.
+7.  **Competency Evaluation:** Ten specific competencies (Ensure Accountability, Cultivates Innovation, Decision Quality, Manages Complexity, Communicates Effectively, Drives Results, Customer Focus, Nimble Learning, Manages Ambiguity, Business Insights), each with a description and five ranking criteria (Excellent to Concerning).
+8.  **Project Manager Feedback.**
+9.  **Talent Assessment:** Based on provided process and quick reference guides.
+
+**Implementation Details Confirmed:**
+*   **AI Integration:** Use Emergent LLM key for report generation and analysis.
+*   **User Management:** System for a single manager managing multiple mentees.
+*   **Data Storage:** Store all evaluation data in MongoDB and allow on-demand report regeneration.
+*   **Report Format:** Provide both PDF export and a web-based detailed view.
+*   **Rubric System:** Will be based on predefined formats from uploaded documents.
+</product_requirements>
+
+<key_technical_concepts>
+-   **FastAPI:** Backend framework.
+-   **React:** Frontend framework.
+-   **MongoDB:** Database for data storage.
+-   **Shadcn/UI:** Component library for the frontend.
+-   **Emergent LLM Key:** For AI integration and report generation.
+-   **UUIDs:** For MongoDB model identifiers.
+-   **Pydantic:** For API response serialization.
+-   **Supervisorctl:** Service management.
+-   **Yarn:** Frontend package manager.
+</key_technical_concepts>
+
+<code_architecture>
+The application has a standard full-stack setup, with a FastAPI backend and a React frontend. The project structure is as follows:
+
+
+
+-   **/app/backend/server.py**: This file will contain the FastAPI application logic, including API routes, database interactions, and business logic for the performance appraisal system. It's crucial for defining how data is stored, retrieved, and processed.
+-   **/app/backend/requirements.txt**: Lists all Python dependencies for the backend. Changes here require  and annotated-types==0.7.0
+anyio==4.11.0
+black==25.9.0
+boto3==1.40.39
+botocore==1.40.39
+certifi==2025.8.3
+cffi==2.0.0
+charset-normalizer==3.4.3
+click==8.3.0
+cryptography==46.0.1
+dnspython==2.8.0
+ecdsa==0.19.1
+email-validator==2.3.0
+fastapi==0.110.1
+flake8==7.3.0
+h11==0.16.0
+idna==3.10
+iniconfig==2.1.0
+isort==6.0.1
+jmespath==1.0.1
+jq==1.10.0
+markdown-it-py==4.0.0
+mccabe==0.7.0
+mdurl==0.1.2
+motor==3.3.1
+mypy==1.18.2
+mypy_extensions==1.1.0
+numpy==2.3.3
+oauthlib==3.3.1
+packaging==25.0
+pandas==2.3.2
+passlib==1.7.4
+pathspec==0.12.1
+platformdirs==4.4.0
+pluggy==1.6.0
+pyasn1==0.6.1
+pycodestyle==2.14.0
+pycparser==2.23
+pydantic==2.11.9
+pydantic_core==2.33.2
+pyflakes==3.4.0
+Pygments==2.19.2
+PyJWT==2.10.1
+pymongo==4.5.0
+pytest==8.4.2
+python-dateutil==2.9.0.post0
+python-dotenv==1.1.1
+python-jose==3.5.0
+python-multipart==0.0.20
+pytokens==0.1.10
+pytz==2025.2
+requests==2.32.5
+requests-oauthlib==2.0.0
+rich==14.1.0
+rsa==4.9.1
+s3transfer==0.14.0
+s5cmd==0.2.0
+shellingham==1.5.4
+six==1.17.0
+sniffio==1.3.1
+starlette==0.37.2
+typer==0.19.2
+typing-inspection==0.4.1
+typing_extensions==4.15.0
+tzdata==2025.2
+urllib3==2.5.0
+uvicorn==0.25.0
+watchfiles==1.1.0 to update.
+-   **/app/backend/.env**: Contains environment variables like  for database connection. This file should NOT be modified directly.
+-   **/app/frontend/src/App.js**: The main entry point for the React frontend. This will orchestrate the UI components and application flow.
+-   **/app/frontend/src/components/ui/**: This directory houses all Shadcn/UI components, which are mandated for building the application's user interface to ensure consistency and modern design.
+-   **/app/frontend/package.json**: Manages frontend dependencies. Updates must be done via yarn add v1.22.22
+info Visit https://yarnpkg.com/en/docs/cli/add for documentation about this command..
+-   **/app/frontend/.env**: Contains environment variables like . This file should NOT be modified directly.
+The backend binds to , and the frontend is served on port 3000, with Kubernetes Ingress routing  to the backend and other traffic to the frontend.
+</code_architecture>
+
+<pending_tasks>
+-   Generate design guidelines for the application.
+-   Create a comprehensive plan () based on user requirements and design guidelines.
+-   Implement backend API endpoints for mentees, performance data, and reports.
+-   Develop frontend UI components for data input, display, and report generation.
+-   Integrate Emergent LLM for performance report generation and analysis.
+-   Implement data storage in MongoDB for evaluations and support report regeneration.
+-   Develop PDF export functionality for reports.
+</pending_tasks>
+
+<current_work>
+The AI engineer is currently in the initial exploration and planning phase for the Performance Appraisal System.
+1.  **Requirements Clarification:** The engineer successfully clarified key functional and technical requirements with the user regarding AI integration (Emergent LLM), user management (single manager/multiple mentees), data storage (MongoDB for evaluations, on-demand regeneration), and report format (PDF and web-based).
+2.  **Environment Exploration:** An initial  was performed to understand the existing project structure, confirming the FastAPI backend and React frontend setup.
+3.  **Document Analysis:** The engineer uploaded and analyzed five PDF documents (, , , , ) using , , and . This step aims to understand the specific content related to Success Profile and Talent Assessment which are crucial inputs for the appraisal system.
+Immediately before this summary, the AI engineer completed the document analysis and is about to retrieve design guidelines.
+</current_work>
+
+<optional_next_step>
+Get design guidelines for the application using the  tool.
+</optional_next_step>
+
