@@ -1,23 +1,19 @@
 [
   {
-    "content": "Implement cycle creation functionality in mentee detail view",
+    "content": "Build comprehensive evaluation form with tabbed sections",
     "status": "completed"
   },
   {
-    "content": "Build comprehensive evaluation form with tabbed sections",
-    "status": "in_progress"
-  },
-  {
     "content": "Create competency evaluation with sliders and evidence fields",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Implement save-as-you-type functionality with debounced API calls",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Integrate Emergent LLM for real-time AI analysis",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Create AI feedback panel with real-time suggestions",
