@@ -406,129 +406,129 @@ async def update_evaluation(cycle_id: str, evaluation_update: EvaluationUpdate):
 # Rubrics Routes
 @api_router.get("/rubrics", response_model=List[Rubric])
 async def get_rubrics():
-    """Return predefined rubrics for competency evaluation"""
-    # For MVP, return hardcoded competencies based on provided documents
+    """Return predefined rubrics for competency evaluation based on actual PAS document"""
+    # Updated rubric based on actual performance appraisal system
     default_rubric = Rubric(
-        name="Standard Performance Rubric",
+        name="TEKsystems Performance Appraisal Rubric",
         competencies=[
             RubricCompetency(
-                key="ensure_accountability",
-                name="Ensure Accountability",
-                description="Delivers results and takes ownership of outcomes",
+                key="nimble_learning",
+                name="Nimble Learning",
+                description="Actively learning through experimentation when tackling new problems, using both successes and failures as learning fodder.",
                 criteria=RubricCriteria(
-                    excellent="Consistently exceeds commitments and holds others accountable",
-                    strong="Reliably meets commitments and addresses performance issues",
-                    solid="Usually meets commitments with occasional follow-up needed",
-                    developing="Sometimes struggles to meet commitments or address issues",
-                    concerning="Frequently fails to meet commitments or avoid accountability"
-                )
-            ),
-            RubricCompetency(
-                key="cultivates_innovation",
-                name="Cultivates Innovation",
-                description="Drives creative solutions and continuous improvement",
-                criteria=RubricCriteria(
-                    excellent="Consistently creates breakthrough innovations and inspires others",
-                    strong="Regularly generates creative solutions and supports innovation",
-                    solid="Occasionally contributes innovative ideas and embraces change",
-                    developing="Shows some openness to new ideas but limited contribution",
-                    concerning="Resists change and rarely contributes innovative solutions"
-                )
-            ),
-            RubricCompetency(
-                key="decision_quality",
-                name="Decision Quality",
-                description="Makes timely, well-reasoned decisions with available information",
-                criteria=RubricCriteria(
-                    excellent="Consistently makes excellent decisions under pressure",
-                    strong="Usually makes sound decisions with good reasoning",
-                    solid="Makes adequate decisions with sufficient information",
-                    developing="Sometimes struggles with decision timing or quality",
-                    concerning="Frequently makes poor decisions or avoids decision-making"
-                )
-            ),
-            RubricCompetency(
-                key="manages_complexity",
-                name="Manages Complexity",
-                description="Navigates complex situations and ambiguous problems effectively",
-                criteria=RubricCriteria(
-                    excellent="Thrives in complex environments and simplifies for others",
-                    strong="Handles complex situations well and finds viable solutions",
-                    solid="Manages moderate complexity with some guidance",
-                    developing="Struggles with highly complex or ambiguous situations",
-                    concerning="Becomes overwhelmed by complexity and confusion"
+                    excellent="Enjoys the challenge of unfamiliar tasks. Seeks new approaches to solve problems. Tries multiple times using multiple methods to find the right solution. Views mistakes as opportunities to learn.",
+                    strong="Experiments to find new solutions. Extracts lessons learned from failures and mistakes. Learns quickly when facing new situations. Takes on the challenge of unfamiliar tasks.",
+                    solid="Shows willingness to learn new approaches with guidance. Adapts to new situations with some support.",
+                    developing="Has difficulty with unfamiliar tasks. Needs structured guidance to learn new concepts.",
+                    concerning="Becomes frustrated or confused by unfamiliar tasks. Gives up on new ideas too soon. Resists taking a chance on untested solutions. Struggles to learn in new situations."
                 )
             ),
             RubricCompetency(
                 key="communicates_effectively",
                 name="Communicates Effectively",
-                description="Conveys information clearly and listens actively",
+                description="Developing and delivering multi-mode communications that convey a clear understanding of the unique needs of different audiences.",
                 criteria=RubricCriteria(
-                    excellent="Outstanding communication skills that inspire and persuade",
-                    strong="Clear, compelling communication adapted to audience",
-                    solid="Good communication skills with occasional misunderstandings",
-                    developing="Communication sometimes unclear or one-directional",
-                    concerning="Poor communication that often leads to confusion"
+                    excellent="Actively listens and checks for understanding. Adjusts communication content and style to meet the needs of diverse stakeholders. Articulates messages in a way that is broadly understandable. Delivers messages in a clear, compelling, and concise manner. Models and encourages the expression of diverse ideas and opinions.",
+                    strong="Adjusts to fit the audience and the message. Attentively listens to others. Encourages the open expression of diverse ideas and opinions. Is effective in a variety of communication settings: one-on-one, small and large groups, or among diverse styles and position levels. Provides timely and helpful information to others across the organization.",
+                    solid="Communicates clearly in most situations. Listens to others and shares information appropriately.",
+                    developing="Communication sometimes unclear or inconsistent. May struggle with different audiences.",
+                    concerning="Doesn't consistently share information others need to do their jobs. Doesn't take the time to listen or understand others' viewpoints. Has difficulty communicating clear written and verbal messages. Tends to always communicate the same way without adjusting to diverse audiences."
                 )
             ),
             RubricCompetency(
                 key="drives_results",
                 name="Drives Results",
-                description="Focuses on achieving outcomes and delivering value",
+                description="Consistently achieving results, even under tough circumstances.",
                 criteria=RubricCriteria(
-                    excellent="Consistently delivers exceptional results and exceeds targets",
-                    strong="Reliably achieves results and helps others succeed",
-                    solid="Usually meets targets with consistent effort",
-                    developing="Sometimes falls short of targets despite effort",
-                    concerning="Frequently fails to achieve expected results"
+                    excellent="Always keeps the end in sight; puts in extra effort to meet deadlines. Is consistently one of the top performers. Persists in the face of challenges and setbacks. Pursues everything with energy, drive, and the need to finish. Sets aggressive goals and has high standards.",
+                    strong="Has a strong bottom-line orientation. Has a track record of exceeding goals successfully. Persists in accomplishing objectives despite obstacles and setbacks. Pushes self and helps others achieve results.",
+                    solid="Generally meets goals and deadlines. Shows persistence in achieving objectives.",
+                    developing="Sometimes struggles to meet deadlines or achieve objectives. May need support to maintain focus.",
+                    concerning="Does the least to get by. Gives up easily; doesn't go back with different strategies for the third and fourth try. Is an inconsistent performer. Is reluctant to push for results. Often misses deadlines. Procrastinates around whatever gets in the way."
                 )
             ),
             RubricCompetency(
                 key="customer_focus",
                 name="Customer Focus",
-                description="Prioritizes customer needs and delivers exceptional experience",
+                description="Building strong customer relationships and delivering customer-centric solutions.",
                 criteria=RubricCriteria(
-                    excellent="Anticipates customer needs and creates exceptional experiences",
-                    strong="Consistently meets customer needs and resolves issues",
-                    solid="Generally responsive to customer needs and feedback",
-                    developing="Sometimes misses customer needs or delays response",
-                    concerning="Poor customer orientation and service delivery"
+                    excellent="Anticipates customer needs and provides services that are beyond customer expectations. Serves as a strategic partner to build, grow, and maintain profitable and long-lasting relationships with key accounts. Uses customer insights to drive and guide the development of new offerings.",
+                    strong="Builds and delivers solutions that meet customer expectations. Establishes and maintains effective customer relationships. Gains insight into customer needs. Identifies opportunities that benefit the customer.",
+                    solid="Generally responsive to customer needs. Maintains professional relationships with customers.",
+                    developing="Shows some awareness of customer needs but may miss opportunities to add value.",
+                    concerning="Acts on incomplete or inaccurate understanding of customer needs. Conducts work activities from an internal, operational standpoint. Fails to build effective relationships with key customers. Is unaware of customer expectations."
                 )
             ),
             RubricCompetency(
-                key="nimble_learning",
-                name="Nimble Learning",
-                description="Quickly acquires new skills and adapts to changing requirements",
+                key="business_insight",
+                name="Business Insight",
+                description="Applying knowledge of business and the marketplace to advance the organization's goals.",
                 criteria=RubricCriteria(
-                    excellent="Rapidly masters new skills and helps others learn",
-                    strong="Quickly learns and applies new knowledge effectively",
-                    solid="Learns at reasonable pace with some support",
-                    developing="Slow to adapt or apply new learning",
-                    concerning="Resists learning or fails to apply new knowledge"
+                    excellent="Consistently applies a business driver and marketplace focus when prioritizing actions. Has an in-depth understanding of how businesses work and make money. Is the first to spot possible future policies, practices, and trends in the organization, with the competition, and in the marketplace.",
+                    strong="Keeps up with current and possible future policies, practices, and trends in the organization, with the competition, and in the marketplace. Knows how businesses work and how organizations make money. Uses knowledge of business drivers and how strategies and tactics play out in the market to guide actions.",
+                    solid="Shows understanding of basic business drivers. Stays informed about organizational policies and practices.",
+                    developing="Limited understanding of business context. May focus primarily on technical aspects without business consideration.",
+                    concerning="Doesn't take business drivers into account when planning and executing own work. Doesn't understand how businesses work. Is not up-to-date on current and future policies, trends, and information affecting the organization. Is unaware of how strategies and tactics work in the marketplace."
+                )
+            ),
+            RubricCompetency(
+                key="cultivates_innovation",
+                name="Cultivates Innovation",
+                description="Creating new and better ways for the organization to be successful.",
+                criteria=RubricCriteria(
+                    excellent="Builds excitement in others to explore creative options. Continually assesses the market potential of an innovative idea or solution. Finds and champions the best creative ideas and actively moves them into implementation. Moves beyond traditional ways of doing things; pushes past the status quo. Tries multiple, varied approaches to innovative ideas.",
+                    strong="Can take a creative idea and put it into practice. Comes up with useful ideas that are new, better, or unique. Encourages diverse thinking to promote and nurture innovation. Introduces new ways of looking at problems.",
+                    solid="Shows creativity in problem-solving. Open to new ideas and approaches.",
+                    developing="Shows some creativity but may need encouragement to think outside conventional approaches.",
+                    concerning="Has a style that discourages the creative initiatives of others. Presents ideas that are ordinary, conventional, and from the past. Stays within comfort zone rather than experimenting with new ways of looking at things. Tends to be critical of others' original ideas."
+                )
+            ),
+            RubricCompetency(
+                key="ensures_accountability",
+                name="Ensures Accountability",
+                description="Holding self and others accountable to meet commitments.",
+                criteria=RubricCriteria(
+                    excellent="Assumes responsibility for the outcomes of others. Is completely on top of what is going on and knows where things stand. Promotes a sense of urgency and establishes and enforces individual accountability in the team. Provides balanced feedback at the most critical times. Works with people to establish explicit performance standards.",
+                    strong="Acts with a clear sense of ownership. Designs feedback loops into work. Establishes clear responsibilities and processes for monitoring work and measuring results. Follows through on commitments and makes sure others do the same. Takes personal responsibility for decisions, actions, and failures.",
+                    solid="Generally reliable and takes responsibility for own work. Follows through on most commitments.",
+                    developing="Sometimes needs reminders to follow through. May avoid taking full responsibility in challenging situations.",
+                    concerning="Fails to accept a fair share of personal responsibility. Gathers little information about how things are going. Prefers to be one of many accountable for an assignment. Provides inadequate feedback; fails to help others adjust course midstream."
                 )
             ),
             RubricCompetency(
                 key="manages_ambiguity",
                 name="Manages Ambiguity",
-                description="Operates effectively without complete information or clear direction",
+                description="Operating effectively, even when things are not certain or the way forward is not clear.",
                 criteria=RubricCriteria(
-                    excellent="Thrives in ambiguous situations and provides clarity to others",
-                    strong="Comfortable with ambiguity and makes progress despite uncertainty",
-                    solid="Manages moderate ambiguity with some guidance",
-                    developing="Uncomfortable with ambiguity and needs clear direction",
-                    concerning="Paralyzed by ambiguity and requires extensive guidance"
+                    excellent="Adapts quickly to changing conditions. Is energized when faced with ambiguity and uncertainty. Makes significant progress and remains calm and composed, even when things are uncertain. Manages the risk that comes with moving forward when the outcome isn't certain.",
+                    strong="Can decide and act without the total picture. Deals comfortably with the uncertainty of change. Deals constructively with problems that do not have clear solutions or outcomes. Effectively handles risk. Is calm and productive, even when things are up in the air.",
+                    solid="Generally handles uncertain situations adequately. Can work with incomplete information when needed.",
+                    developing="May feel uncomfortable with ambiguous situations. Prefers clear direction and structured environments.",
+                    concerning="Appears stressed when things are uncertain. Delays moving forward until all the details are known. Operates best when things are structured and predictable. Struggles to make progress when facing ambiguous or uncertain situations."
                 )
             ),
             RubricCompetency(
-                key="business_insights",
-                name="Business Insights",
-                description="Understands business context and applies strategic thinking",
+                key="manages_complexity",
+                name="Manages Complexity",
+                description="Making sense of complex, high quantity, and sometimes contradictory information to effectively solve problems.",
                 criteria=RubricCriteria(
-                    excellent="Deep business acumen that drives strategic initiatives",
-                    strong="Good business understanding and strategic contributions",
-                    solid="Adequate business awareness with tactical focus",
-                    developing="Limited business understanding and narrow perspective",
-                    concerning="Poor business awareness that impacts decision-making"
+                    excellent="Analyzes multiple and diverse sources of information to define problems accurately before moving to solutions. Looks beyond the obvious and doesn't stop at the first answers. Readily distinguishes between what's relevant and what's unimportant to make sense of complex situations.",
+                    strong="Acquires data from multiple and diverse sources when solving problems. Asks the right questions to accurately analyze situations. Evaluates pros and cons, risks and benefits of different solution options. Uncovers root causes to difficult problems.",
+                    solid="Generally able to handle complex situations with some guidance. Uses available information to solve problems.",
+                    developing="May struggle with highly complex situations. Benefits from breaking down complex problems into smaller parts.",
+                    concerning="Doesn't gather sufficient information to assess situations completely. Is caught off guard when problems surface without an obvious solution. Misses the complexity of issues and force fits solutions. Relies solely on intuition, even when contrary information exists."
+                )
+            ),
+            RubricCompetency(
+                key="decision_quality",
+                name="Decision Quality",
+                description="Making good and timely decisions that keep the organization moving forward.",
+                criteria=RubricCriteria(
+                    excellent="Actively seeks input from pertinent sources to make timely and well-informed decisions. Decisively makes high-quality decisions, even when based on incomplete information or in the face of uncertainty. Is respected by others for displaying superior judgment. Skillfully separates opinions from facts.",
+                    strong="Considers all relevant factors and uses appropriate decision-making criteria and principles. Makes sound decisions, even in the absence of complete information. Recognizes when a quick 80% solution will suffice. Relies on a mixture of analysis, wisdom, experience, and judgment when making decisions.",
+                    solid="Generally makes sound decisions with available information. Considers key factors before deciding.",
+                    developing="May need guidance on complex decisions. Sometimes delays decision-making when faced with uncertainty.",
+                    concerning="Approaches decisions haphazardly or delays decision making. Ignores different points of view or makes decisions that impact short-term results at the expense of longer-term goals. Makes decisions based on incomplete data or inaccurate assumptions."
                 )
             )
         ]
