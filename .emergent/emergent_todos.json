@@ -1,10 +1,34 @@
 [
   {
-    "content": "Create frontend app shell with routing and navigation",
-    "status": "completed"
+    "content": "Implement cycle creation functionality in mentee detail view",
+    "status": "pending"
   },
   {
-    "content": "Build mentee management dashboard with table and CRUD operations",
-    "status": "completed"
+    "content": "Build comprehensive evaluation form with tabbed sections",
+    "status": "pending"
+  },
+  {
+    "content": "Create competency evaluation with sliders and evidence fields",
+    "status": "pending"
+  },
+  {
+    "content": "Implement save-as-you-type functionality with debounced API calls",
+    "status": "pending"
+  },
+  {
+    "content": "Integrate Emergent LLM for real-time AI analysis",
+    "status": "pending"
+  },
+  {
+    "content": "Create AI feedback panel with real-time suggestions",
+    "status": "pending"
+  },
+  {
+    "content": "Build report generation and PDF export functionality",
+    "status": "pending"
+  },
+  {
+    "content": "Add competency radar charts and analytics",
+    "status": "pending"
   }
 ]
