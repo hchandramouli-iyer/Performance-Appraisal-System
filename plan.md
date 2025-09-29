@@ -20,7 +20,7 @@ Successfully delivered a comprehensive, modern Performance Appraisal System enab
 - ✅ Deliver a polished, accessible interface aligned to design guidelines with competency radar charts.
 
 ## 3) UI/UX Design Guidelines - FULLY IMPLEMENTED ✅
-Per design_guidelines.md (Axis Performance Design System):
+Per design_guidelines.md (Talent Fluency Design System):
 - ✅ Color & Theme: Primary brand #2563EB implemented throughout; proper hover/active states; accessible contrast ratios.
 - ✅ Typography: Chivo headings, Karla body text, IBM Plex Mono for metrics - all properly implemented.
 - ✅ Components: Full Shadcn/UI integration with Button, Card, Input, Textarea, Select, Tabs, Dialog, Progress, Slider, etc.
