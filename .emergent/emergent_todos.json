@@ -1,18 +1,10 @@
 [
   {
-    "content": "Integrate Emergent LLM for real-time AI analysis",
-    "status": "completed"
-  },
-  {
-    "content": "Create AI feedback panel with real-time suggestions",
-    "status": "completed"
-  },
-  {
     "content": "Build report generation and PDF export functionality",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Add competency radar charts and analytics",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
