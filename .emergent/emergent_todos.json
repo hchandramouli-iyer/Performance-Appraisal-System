@@ -1,7 +1,7 @@
 [
   {
     "content": "Verify supervisor services and environment setup",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Add global design tokens and typography to frontend CSS",
