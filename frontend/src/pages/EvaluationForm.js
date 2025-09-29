@@ -263,10 +263,10 @@ function EvaluationForm() {
                 data-testid="generate-report-button"
                 variant="outline"
                 className="flex items-center gap-2"
-                onClick={() => toast.info('Report generation coming soon!')}
+                onClick={() => navigate(`/mentee/${menteeId}/cycle/${cycleId}/report`)}
               >
                 <FileText size={18} />
-                Generate Report
+                View Report
               </Button>
             </div>
           </div>
