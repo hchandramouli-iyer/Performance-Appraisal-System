@@ -147,9 +147,30 @@ class Certification(BaseModel):
 class RoleFit(BaseModel):
     current_role: str
     next_role: str
-    fit_current: int = Field(ge=0, le=5)
-    fit_next: int = Field(ge=0, le=5)
+    fit_current: int = Field(ge=1, le=5)
+    fit_next: int = Field(ge=1, le=5)
     gaps: List[str] = []
+    
+    # EBR Framework - Organization
+    ebr_organization_utilization: Optional[str] = None
+    ebr_organization_engagement: Optional[str] = None
+    ebr_organization_compliance: Optional[str] = None
+    
+    # EBR Framework - Project
+    ebr_project_feedback: Optional[str] = None
+    ebr_project_quality: Optional[str] = None
+    
+    # EBR Framework - Team/Practice
+    ebr_team_certifications: Optional[str] = None
+    ebr_team_cert_level: Optional[str] = None
+    ebr_team_contribution: Optional[str] = None
+    ebr_team_glint: Optional[str] = None
+    ebr_team_leadership: Optional[str] = None
+    
+    # EBR Framework - Self
+    ebr_self_goal_attainment: Optional[str] = None
+    ebr_self_development: Optional[str] = None
+    ebr_self_progress: Optional[str] = None
 
 class PMFeedback(BaseModel):
     comments: Optional[str] = None
