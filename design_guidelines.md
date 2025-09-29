@@ -471,7 +471,7 @@ export function Footer() {
           </div>
         </form>
         <div className="text-right md:text-left">
-          <p className="caption">© {new Date().getFullYear()} Axis Performance</p>
+          <p className="caption">© {new Date().getFullYear()} Talent Fluency</p>
         </div>
       </div>
     </footer>
