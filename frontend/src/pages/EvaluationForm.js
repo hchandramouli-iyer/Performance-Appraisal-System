@@ -1139,7 +1139,7 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
                                 <SelectItem value="exceptional">Exceptional (>95%)</SelectItem>
                                 <SelectItem value="strong">Strong (90-95%)</SelectItem>
                                 <SelectItem value="meets">Meets Target (85-89%)</SelectItem>
-                                <SelectItem value="below">Below Target (<85%)</SelectItem>
+                                <SelectItem value="below">Below Target (&lt;85%)</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
