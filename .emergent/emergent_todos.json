@@ -1,15 +1,11 @@
 [
   {
-    "content": "Add global design tokens and typography to frontend CSS",
+    "content": "Install required Python dependencies (emergentintegrations, datetime, etc.)",
     "status": "completed"
   },
   {
-    "content": "Install required Python dependencies (emergentintegrations, datetime, etc.)",
-    "status": "in_progress"
-  },
-  {
     "content": "Install required frontend dependencies (recharts, framer-motion, lucide-react)",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Create backend domain models (Pydantic models for mentees, cycles, evaluations, etc.)",
