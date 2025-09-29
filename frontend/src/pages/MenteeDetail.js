@@ -240,9 +240,7 @@ function MenteeDetail() {
               <Button 
                 data-testid="empty-create-cycle-button"
                 className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white"
-                onClick={() => {
-                  toast.info('Cycle creation coming soon!');
-                }}
+                onClick={() => setCycleDialogOpen(true)}
               >
                 <Plus size={18} />
                 Create First Cycle
