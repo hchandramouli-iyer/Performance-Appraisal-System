@@ -411,23 +411,29 @@ function EvaluationForm() {
                             
                             <div className="md:col-span-4 space-y-3">
                               <div>
-                                <Label className="label mb-2">Score: {competency.score}</Label>
-                                <Slider
-                                  value={[competency.score]}
-                                  onValueChange={(value) => updateCompetencyScore(index, value)}
-                                  max={5}
-                                  min={0}
-                                  step={1}
-                                  data-testid={`competency-${competency.key}-slider`}
-                                  className="w-full"
-                                />
-                                <div className="flex justify-between text-xs text-[color:var(--text-muted)] mt-1">
-                                  <span>0</span>
-                                  <span>1</span>
-                                  <span>2</span>
-                                  <span>3</span>
-                                  <span>4</span>
-                                  <span>5</span>
+                                <Label className="label mb-3">Score: {competency.score}/5</Label>
+                                <div className="flex items-center gap-4">
+                                  {[1, 2, 3, 4, 5].map((score) => (
+                                    <div key={score} className="flex flex-col items-center gap-1">
+                                      <input
+                                        type="radio"
+                                        name={`competency-${competency.key}-score`}
+                                        value={score}
+                                        checked={competency.score === score}
+                                        onChange={() => updateCompetencyScore(index, [score])}
+                                        data-testid={`competency-${competency.key}-score-${score}`}
+                                        className="w-4 h-4 text-[var(--brand)] bg-[var(--bg-card)] border-[var(--border-medium)] focus:ring-[var(--brand)] focus:ring-2"
+                                      />
+                                      <span className="body-sm text-[color:var(--text-secondary)] font-medium">{score}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div className="flex justify-between text-xs text-[color:var(--text-muted)] mt-2">
+                                  <span>Concerning</span>
+                                  <span>Developing</span>
+                                  <span>Solid</span>
+                                  <span>Strong</span>
+                                  <span>Excellent</span>
                                 </div>
                               </div>
                               
