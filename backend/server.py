@@ -544,7 +544,7 @@ async def get_rubrics():
 # AI Analysis Routes
 @api_router.post("/ai/analyze", response_model=AIAnalysisResponse)
 async def analyze_evaluation(request: AIAnalysisRequest):
-    """Real-time AI analysis of evaluation data using Emergent LLM"""
+    """Comprehensive AI analysis acting as manager providing feedback and rating recommendations"""
     try:
         from emergentintegrations.llm.chat import LlmChat, UserMessage
         import os
@@ -552,139 +552,237 @@ async def analyze_evaluation(request: AIAnalysisRequest):
         # Get Emergent LLM key
         emergent_key = "sk-emergent-a1598F1D1052dA76f2"
         
-        # Initialize LLM chat
+        # Initialize LLM chat with manager persona
         chat = LlmChat(
             api_key=emergent_key,
-            session_id=f"evaluation-{request.cycle_id}",
-            system_message="""You are an AI performance evaluation assistant. Analyze evaluation data and provide helpful insights.
+            session_id=f"manager-analysis-{request.cycle_id}",
+            system_message="""You are an experienced performance management AI acting as a senior manager reviewing employee performance evaluations. Your role is to:
 
-Your role is to:
-1. Identify patterns in competency scores
-2. Suggest improvements for evidence quality  
-3. Flag potential risks or concerns
-4. Provide constructive feedback
-5. Highlight strengths and achievements
+1. **PROVIDE MANAGER'S FEEDBACK**: Review all evaluation data and provide comprehensive managerial feedback as if you're the employee's direct manager
+2. **CONSOLIDATE & ANALYZE**: Synthesize all information (competencies, self-reflection, goals, feedback) to provide holistic insights
+3. **SUGGEST ACCURATE RATINGS**: Based on evidence and performance data, recommend appropriate competency ratings (1-5 scale)
+4. **IDENTIFY PATTERNS**: Spot strengths, development areas, and alignment between different evaluation sections
 
-Respond with specific, actionable insights based on the evaluation data provided."""
+**Response Format Guidelines:**
+- Be direct, constructive, and professional
+- Reference specific evidence provided
+- Suggest concrete development actions
+- Highlight both strengths and improvement areas
+- Provide rating justifications based on evidence
+
+**Rating Scale:**
+- 5 (Excellent): Exceptional performance with strong evidence
+- 4 (Strong): Solid performance exceeding expectations  
+- 3 (Solid): Meets expectations with competent performance
+- 2 (Developing): Below expectations, needs development
+- 1 (Concerning): Significant performance gaps requiring immediate attention"""
         ).with_model("openai", "gpt-4o")
         
-        # Prepare evaluation data for analysis
+        # Get comprehensive evaluation context
         eval_data = request.evaluation_data
-        analysis_prompt = "Analyze this performance evaluation data:\n\n"
         
-        # Add competency analysis
+        # Build comprehensive analysis prompt
+        analysis_prompt = """Please analyze this complete performance evaluation and provide manager-level feedback:
+
+=== EMPLOYEE COMPETENCY ASSESSMENT ==="""
+        
+        # Add competency analysis with evidence
         if eval_data.get("competencies"):
-            analysis_prompt += "COMPETENCY SCORES:\n"
+            analysis_prompt += "\nCOMPETENCY SCORES & EVIDENCE:\n"
             for comp in eval_data["competencies"]:
-                analysis_prompt += f"- {comp.get('name', 'Unknown')}: {comp.get('score', 0)}/5\n"
-                if comp.get('evidence'):
-                    analysis_prompt += f"  Evidence: {comp['evidence'][:200]}...\n"
-            analysis_prompt += "\n"
+                score = comp.get('score', 3)
+                evidence = comp.get('evidence', 'No evidence provided')
+                analysis_prompt += f"\n• {comp.get('name', 'Unknown')}: Currently rated {score}/5"
+                analysis_prompt += f"\n  Evidence: {evidence[:300]}{'...' if len(evidence) > 300 else ''}\n"
         
-        # Add other sections
-        if eval_data.get("idp", {}).get("goals"):
-            analysis_prompt += f"IDP GOALS: {len(eval_data['idp']['goals'])} goals set\n"
+        # Add self-reflection analysis
+        if eval_data.get("idp", {}).get("self_reflection"):
+            sr = eval_data["idp"]["self_reflection"]
+            analysis_prompt += "\n=== SELF-REFLECTION RESPONSES ===\n"
+            if sr.get("key_strengths"):
+                analysis_prompt += f"\nKey Strengths: {sr['key_strengths'][:200]}...\n"
+            if sr.get("passions"):
+                analysis_prompt += f"\nPassions: {sr['passions'][:200]}...\n"
+            if sr.get("development_opportunities"):
+                analysis_prompt += f"\nDevelopment Opportunities: {sr['development_opportunities'][:200]}...\n"
+            if sr.get("proud_accomplishments"):
+                analysis_prompt += f"\nProud Accomplishments: {sr['proud_accomplishments'][:200]}...\n"
         
+        # Add development goals
+        if eval_data.get("idp", {}).get("development_goals"):
+            dg = eval_data["idp"]["development_goals"]
+            analysis_prompt += "\n=== DEVELOPMENT GOALS ===\n"
+            if dg.get("teksystems_roles"):
+                analysis_prompt += f"\nCareer Interest: {dg['teksystems_roles']}\n"
+            if dg.get("professional_goals"):
+                analysis_prompt += f"\nProfessional Goals: {dg['professional_goals'][:200]}...\n"
+            if dg.get("personal_goals"):
+                analysis_prompt += f"\nPersonal Goals: {dg['personal_goals'][:200]}...\n"
+        
+        # Add role fit and other assessments
         if eval_data.get("role_fit"):
             rf = eval_data["role_fit"]
-            analysis_prompt += f"ROLE FIT: Current={rf.get('fit_current', 0)}/5, Next={rf.get('fit_next', 0)}/5\n"
+            analysis_prompt += f"\n=== ROLE FIT ANALYSIS ===\n"
+            analysis_prompt += f"Current Role: {rf.get('current_role', 'N/A')} (Fit: {rf.get('fit_current', 0)}/5)\n"
+            analysis_prompt += f"Next Role: {rf.get('next_role', 'N/A')} (Readiness: {rf.get('fit_next', 0)}/5)\n"
         
         if eval_data.get("talent_assessment"):
             ta = eval_data["talent_assessment"]
-            analysis_prompt += f"TALENT ASSESSMENT: Potential={ta.get('potential', 'Unknown')}, Risk={ta.get('risk', 'Unknown')}, Overall={ta.get('overall', 'Unknown')}\n"
+            analysis_prompt += f"\n=== CURRENT TALENT ASSESSMENT ===\n"
+            analysis_prompt += f"Potential: {ta.get('potential', 'N/A')}, Risk: {ta.get('risk', 'N/A')}, Overall: {ta.get('overall', 'N/A')}\n"
         
-        analysis_prompt += "\nPlease provide:\n1. Key insights (2-3 points)\n2. Areas of strength\n3. Areas for improvement\n4. Any risk flags\n5. Missing evidence or data gaps\n\nKeep responses concise and actionable."
+        # Request specific manager feedback
+        analysis_prompt += """
+
+=== MANAGER ANALYSIS REQUESTED ===
+As a senior manager, please provide:
+
+1. **OVERALL PERFORMANCE ASSESSMENT** (2-3 sentences summarizing strengths and areas for development)
+
+2. **COMPETENCY RATING RECOMMENDATIONS** 
+   - Review evidence provided for each competency
+   - Suggest appropriate ratings (1-5) with justifications
+   - Identify any ratings that seem too high/low based on evidence
+
+3. **DEVELOPMENT PRIORITIES** (Top 3 specific actions for growth)
+
+4. **ALIGNMENT ANALYSIS** (How well do self-assessments align with evidence provided?)
+
+5. **MANAGER'S RECOMMENDATIONS** (Specific next steps and support needed)
+
+Please be specific, constructive, and reference the evidence provided."""
         
-        # Get AI analysis
+        # Get AI manager analysis
         user_message = UserMessage(text=analysis_prompt)
         ai_response = await chat.send_message(user_message)
         
-        # Parse AI response into structured format
+        # Parse comprehensive AI response
         response_text = ai_response if isinstance(ai_response, str) else str(ai_response)
         
-        # Extract insights from AI response
+        # Extract structured feedback
         items = []
         rubric_alignment = []
         missing_fields = []
         
-        # Simple parsing logic for the AI response
+        # Parse AI response into structured feedback
         lines = response_text.split('\n')
         current_section = None
         
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-                
-            if any(keyword in line.lower() for keyword in ['strength', 'positive', 'excellent', 'strong']):
-                items.append(AIFeedbackItem(type="success", text=line))
-            elif any(keyword in line.lower() for keyword in ['risk', 'concern', 'warning', 'issue']):
-                items.append(AIFeedbackItem(type="risk", text=line))
-            elif any(keyword in line.lower() for keyword in ['suggest', 'improve', 'consider', 'recommend']):
-                items.append(AIFeedbackItem(type="suggestion", text=line))
-            elif len(line) > 20:  # General insight
-                items.append(AIFeedbackItem(type="suggestion", text=line))
+        # Extract key insights and convert to structured items
+        feedback_sections = response_text.lower()
         
-        # Add some basic rubric alignment checks
+        # Look for manager recommendations
+        if 'recommend' in feedback_sections or 'suggest' in feedback_sections:
+            recommendations = [line.strip() for line in lines if 
+                             ('recommend' in line.lower() or 'suggest' in line.lower()) 
+                             and len(line.strip()) > 20]
+            for rec in recommendations[:3]:
+                items.append(AIFeedbackItem(type="suggestion", text=rec.strip()))
+        
+        # Look for concerns or development areas
+        if 'concern' in feedback_sections or 'development' in feedback_sections or 'improve' in feedback_sections:
+            concerns = [line.strip() for line in lines if 
+                       ('concern' in line.lower() or 'development' in line.lower() or 'improve' in line.lower()) 
+                       and len(line.strip()) > 20]
+            for concern in concerns[:2]:
+                items.append(AIFeedbackItem(type="risk", text=concern.strip()))
+        
+        # Look for strengths and positive feedback
+        if 'strength' in feedback_sections or 'excellent' in feedback_sections or 'strong' in feedback_sections:
+            strengths = [line.strip() for line in lines if 
+                        ('strength' in line.lower() or 'excellent' in line.lower() or 'strong' in line.lower()) 
+                        and len(line.strip()) > 20]
+            for strength in strengths[:2]:
+                items.append(AIFeedbackItem(type="success", text=strength.strip()))
+        
+        # Add overall assessment if available
+        if len(response_text) > 100:
+            # Extract first substantial paragraph as overall assessment
+            paragraphs = [p.strip() for p in response_text.split('\n\n') if len(p.strip()) > 50]
+            if paragraphs:
+                items.insert(0, AIFeedbackItem(
+                    type="suggestion", 
+                    text=f"Manager's Assessment: {paragraphs[0][:200]}..."
+                ))
+        
+        # Analyze competency ratings for rubric alignment
         if eval_data.get("competencies"):
-            scores = [comp.get("score", 0) for comp in eval_data["competencies"]]
-            avg_score = sum(scores) / len(scores) if scores else 0
+            high_scores = [comp for comp in eval_data["competencies"] if comp.get("score", 0) >= 4]
+            low_scores = [comp for comp in eval_data["competencies"] if comp.get("score", 0) <= 2]
             
-            if avg_score >= 4:
-                rubric_alignment.append("Strong performance across competencies")
-            elif avg_score >= 3:
-                rubric_alignment.append("Solid competency performance with room for growth")
-            else:
-                rubric_alignment.append("Competency scores suggest need for focused development")
+            if high_scores:
+                rubric_alignment.append(f"Strong performance indicated in {len(high_scores)} competencies")
+            if low_scores:
+                rubric_alignment.append(f"Development needed in {len(low_scores)} competency areas")
+            
+            # Check for evidence gaps
+            no_evidence = [comp for comp in eval_data["competencies"] 
+                          if not comp.get("evidence") or len(comp.get("evidence", "")) < 20]
+            if no_evidence:
+                missing_fields.extend([f"Evidence needed for {comp.get('name', 'competency')}" 
+                                     for comp in no_evidence[:3]])
         
-        # Check for missing evidence
-        if eval_data.get("competencies"):
-            missing_evidence = [comp.get("name", "Unknown") for comp in eval_data["competencies"] 
-                             if not comp.get("evidence")]
-            if missing_evidence:
-                missing_fields.extend([f"Evidence needed for {comp}" for comp in missing_evidence[:3]])
-        
-        # Ensure we have at least some feedback
+        # Ensure we have comprehensive feedback
         if not items:
-            items.append(AIFeedbackItem(
-                type="suggestion", 
-                text="Continue adding evaluation details for more comprehensive AI analysis."
-            ))
+            items = [
+                AIFeedbackItem(type="suggestion", 
+                             text="Manager Feedback: Continue developing your evaluation with more specific examples and evidence to receive detailed performance analysis."),
+                AIFeedbackItem(type="suggestion", 
+                             text="Complete all sections of the evaluation for comprehensive manager review and rating recommendations.")
+            ]
         
         return AIAnalysisResponse(
-            items=items[:5],  # Limit to 5 items
+            items=items[:8],  # Allow more comprehensive feedback
             rubric_alignment=rubric_alignment,
-            missing_fields=missing_fields[:3]  # Limit to 3 missing fields
+            missing_fields=missing_fields[:4]
         )
         
     except Exception as e:
-        logger.error(f"AI analysis failed: {str(e)}")
-        # Fallback to basic analysis
+        logger.error(f"AI manager analysis failed: {str(e)}")
+        # Fallback to intelligent basic analysis
         items = []
         
+        # Provide manager-style feedback even in fallback
         if request.evaluation_data.get("competencies"):
-            scores = [comp.get("score", 0) for comp in request.evaluation_data["competencies"]]
-            if scores:
-                avg_score = sum(scores) / len(scores)
-                if avg_score < 2:
-                    items.append(AIFeedbackItem(
-                        type="risk",
-                        text="Low competency scores may indicate need for additional support"
-                    ))
-                elif avg_score > 4:
-                    items.append(AIFeedbackItem(
-                        type="success", 
-                        text="Strong competency performance across multiple areas"
-                    ))
-                else:
-                    items.append(AIFeedbackItem(
-                        type="suggestion",
-                        text="Consider adding more specific evidence examples for higher scores"
-                    ))
+            scores = [comp.get("score", 3) for comp in request.evaluation_data["competencies"]]
+            evidence_count = len([comp for comp in request.evaluation_data["competencies"] 
+                                if comp.get("evidence") and len(comp.get("evidence", "")) > 20])
+            
+            avg_score = sum(scores) / len(scores) if scores else 3
+            
+            if avg_score >= 4:
+                items.append(AIFeedbackItem(
+                    type="success",
+                    text="Manager Feedback: Strong self-assessment scores. Ensure evidence supports these high ratings for accurate review."
+                ))
+            elif avg_score <= 2.5:
+                items.append(AIFeedbackItem(
+                    type="risk",
+                    text="Manager Feedback: Lower competency scores indicate development opportunities. Let's discuss specific support and training needs."
+                ))
+            
+            if evidence_count < len(scores) / 2:
+                items.append(AIFeedbackItem(
+                    type="suggestion",
+                    text="Manager Feedback: Please provide more detailed evidence and examples for competency ratings to support accurate evaluation."
+                ))
+        
+        # Check self-reflection completeness
+        if request.evaluation_data.get("idp", {}).get("self_reflection"):
+            sr = request.evaluation_data["idp"]["self_reflection"]
+            completed_fields = sum(1 for field in [sr.get("key_strengths"), sr.get("passions"), 
+                                 sr.get("development_opportunities"), sr.get("proud_accomplishments")] 
+                                 if field and len(field.strip()) > 10)
+            
+            if completed_fields >= 3:
+                items.append(AIFeedbackItem(
+                    type="success",
+                    text="Manager Feedback: Excellent self-reflection responses. This demonstrates strong self-awareness and commitment to development."
+                ))
         
         return AIAnalysisResponse(
-            items=items,
-            rubric_alignment=["AI analysis temporarily unavailable"],
+            items=items if items else [AIFeedbackItem(type="suggestion", text="Manager Feedback: Complete more evaluation sections to receive comprehensive performance analysis and rating recommendations.")],
+            rubric_alignment=["AI analysis providing basic manager feedback"],
             missing_fields=[]
         )
 
