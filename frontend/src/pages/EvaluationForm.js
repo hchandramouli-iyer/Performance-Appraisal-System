@@ -1170,28 +1170,95 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
         <Card className="card" data-testid="ai-feedback-panel">
           <div className="card__header flex items-center gap-2">
             <Brain size={20} className="text-[color:var(--brand)]" />
-            <h4 className="h4">AI Analysis</h4>
+            <h4 className="h4">Manager AI Analysis</h4>
           </div>
           <div className="card__body">
             {aiAnalysis.items.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {aiAnalysis.items.map((item, i) => (
-                  <div key={i} data-testid={`ai-feedback-item-${i}`} className="flex items-start gap-2">
-                    <span className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                      item.type === 'risk' ? 'bg-[var(--accent-danger)]' :
-                      item.type === 'suggestion' ? 'bg-[var(--accent-info)]' : 
-                      'bg-[var(--accent-success)]'
-                    }`}></span>
-                    <p className="body-sm">{item.text}</p>
+                  <div key={i} data-testid={`ai-feedback-item-${i}`} className="p-3 rounded-[var(--radius-sm)] border-l-4 border-[var(--brand)]">
+                    <div className="flex items-start gap-3">
+                      <span className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                        item.type === 'risk' ? 'bg-[var(--accent-danger)]' :
+                        item.type === 'suggestion' ? 'bg-[var(--accent-info)]' : 
+                        'bg-[var(--accent-success)]'
+                      }`}></span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            item.type === 'risk' ? 'bg-[var(--accent-danger)]/10 text-[color:var(--accent-danger)]' :
+                            item.type === 'suggestion' ? 'bg-[var(--accent-info)]/10 text-[color:var(--accent-info)]' : 
+                            'bg-[var(--accent-success)]/10 text-[color:var(--accent-success)]'
+                          }`}>
+                            {item.type === 'risk' ? 'Development Area' :
+                             item.type === 'suggestion' ? 'Manager Feedback' : 'Strength'}
+                          </span>
+                        </div>
+                        <p className="body-sm text-[color:var(--text-secondary)]">{item.text}</p>
+                      </div>
+                    </div>
                   </div>
                 ))}
+                
+                {/* Rubric Alignment Section */}
+                {aiAnalysis.rubric_alignment.length > 0 && (
+                  <div className="pt-4 border-t border-[var(--border-light)]">
+                    <h5 className="body-md font-semibold mb-2 text-[color:var(--text-primary)]">Performance Analysis</h5>
+                    <div className="space-y-2">
+                      {aiAnalysis.rubric_alignment.map((alignment, i) => (
+                        <div key={i} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 bg-[var(--brand)] rounded-full mt-2 flex-shrink-0"></span>
+                          <p className="body-sm text-[color:var(--text-secondary)]">{alignment}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Missing Fields Section */}
+                {aiAnalysis.missing_fields.length > 0 && (
+                  <div className="pt-4 border-t border-[var(--border-light)]">
+                    <h5 className="body-md font-semibold mb-2 text-[color:var(--accent-warning)]">Action Items</h5>
+                    <div className="space-y-2">
+                      {aiAnalysis.missing_fields.map((field, i) => (
+                        <div key={i} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 bg-[var(--accent-warning)] rounded-full mt-2 flex-shrink-0"></span>
+                          <p className="body-sm text-[color:var(--text-secondary)]">{field}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Analysis Status */}
+                <div className="pt-4 border-t border-[var(--border-light)]">
+                  <div className="flex items-center gap-2">
+                    <Brain size={14} className="text-[color:var(--accent-success)]" />
+                    <p className="body-sm text-[color:var(--accent-success)] font-medium">
+                      Manager AI Analysis Active
+                    </p>
+                  </div>
+                  <p className="body-sm text-[color:var(--text-muted)] mt-1">
+                    Real-time feedback based on evaluation data
+                  </p>
+                </div>
               </div>
             ) : (
-              <div className="text-center py-6">
-                <Brain size={32} className="mx-auto text-[color:var(--text-muted)] mb-2" />
-                <p className="body-sm text-[color:var(--text-muted)]">
-                  AI analysis will appear here as you fill out the evaluation.
+              <div className="text-center py-8">
+                <Brain size={48} className="mx-auto text-[color:var(--text-muted)] mb-4" />
+                <h5 className="body-md font-semibold mb-2">Manager AI Analysis</h5>
+                <p className="body-sm text-[color:var(--text-muted)] mb-4">
+                  AI will provide manager-level feedback and rating recommendations as you complete the evaluation.
                 </p>
+                <div className="p-3 bg-[color:var(--bg-section)] rounded-[var(--radius-sm)] text-left">
+                  <p className="body-sm text-[color:var(--text-secondary)]">
+                    <strong>AI will analyze:</strong><br/>
+                    • Competency ratings vs evidence<br/>
+                    • Self-reflection alignment<br/>
+                    • Development goal clarity<br/>
+                    • Overall performance patterns
+                  </p>
+                </div>
               </div>
             )}
           </div>
