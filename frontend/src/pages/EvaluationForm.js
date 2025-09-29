@@ -909,14 +909,15 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
                 <div>
                   <h3 className="h3 mb-4">Role Fit Analysis</h3>
                   <p className="body-md text-[color:var(--text-secondary)] mb-6">
-                    Evaluate current role performance and readiness for next role.
+                    Evaluate performance against role-specific expectations and readiness for advancement using the EBR (Expected Behavior & Results) framework.
                   </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                {/* Current and Next Role Overview */}
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
                   <Card className="card">
                     <div className="card__body space-y-4">
-                      <h4 className="h4">Current Role</h4>
+                      <h4 className="h4">Current Role Performance</h4>
                       <div>
                         <Label className="label">Role Title</Label>
                         <Input
@@ -930,14 +931,14 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
                         />
                       </div>
                       <div>
-                        <Label className="label">Fit Score: {evaluationData.role_fit.fit_current}</Label>
+                        <Label className="label">Overall Fit Score: {evaluationData.role_fit.fit_current}</Label>
                         <Slider
                           value={[evaluationData.role_fit.fit_current]}
                           onValueChange={(value) => updateEvaluationData({ 
                             role_fit: { ...evaluationData.role_fit, fit_current: value[0] } 
                           })}
                           max={5}
-                          min={0}
+                          min={1}
                           step={1}
                           data-testid="current-role-fit-slider"
                           className="w-full"
@@ -948,7 +949,7 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
 
                   <Card className="card">
                     <div className="card__body space-y-4">
-                      <h4 className="h4">Next Role</h4>
+                      <h4 className="h4">Next Role Readiness</h4>
                       <div>
                         <Label className="label">Target Role</Label>
                         <Input
@@ -969,7 +970,7 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
                             role_fit: { ...evaluationData.role_fit, fit_next: value[0] } 
                           })}
                           max={5}
-                          min={0}
+                          min={1}
                           step={1}
                           data-testid="next-role-fit-slider"
                           className="w-full"
@@ -979,8 +980,295 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
                   </Card>
                 </div>
 
+                {/* EBR Framework Assessment */}
+                <div className="space-y-6">
+                  <h4 className="h4">EBR Framework Assessment</h4>
+                  <p className="body-sm text-[color:var(--text-secondary)] mb-4">
+                    Evaluate performance against Expected Behavior & Results criteria across four key dimensions.
+                  </p>
+
+                  {/* 1. Organization */}
+                  <Card className="card">
+                    <div className="card__header">
+                      <h5 className="body-md font-semibold">1. Organization</h5>
+                    </div>
+                    <div className="card__body space-y-6">
+                      <div>
+                        <Label className="label">Engagement - Staying engaged in billable capacity in projects</Label>
+                        <div className="grid md:grid-cols-2 gap-4 mt-2">
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Target: >85% Utilization</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={evaluationData.role_fit.ebr_organization_utilization || ""}
+                              onChange={(e) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_organization_utilization: e.target.value } 
+                              })}
+                              data-testid="organization-utilization-input"
+                              className="input"
+                              placeholder="Current utilization %"
+                            />
+                          </div>
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Assessment</Label>
+                            <Select
+                              value={evaluationData.role_fit.ebr_organization_engagement || ""}
+                              onValueChange={(value) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_organization_engagement: value } 
+                              })}
+                            >
+                              <SelectTrigger data-testid="organization-engagement-select" className="input">
+                                <SelectValue placeholder="Select performance level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="exceeds">Exceeds Expectations (>90%)</SelectItem>
+                                <SelectItem value="meets">Meets Expectations (85-90%)</SelectItem>
+                                <SelectItem value="approaching">Approaching Expectations (75-84%)</SelectItem>
+                                <SelectItem value="below">Below Expectations (<75%)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="label">Compliance - Complying with all operational hygiene requirements</Label>
+                        <div className="grid md:grid-cols-2 gap-4 mt-2">
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Target: 100% Process Compliance</Label>
+                            <Select
+                              value={evaluationData.role_fit.ebr_organization_compliance || ""}
+                              onValueChange={(value) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_organization_compliance: value } 
+                              })}
+                            >
+                              <SelectTrigger data-testid="organization-compliance-select" className="input">
+                                <SelectValue placeholder="Select compliance level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="full">100% Compliant</SelectItem>
+                                <SelectItem value="high">95-99% Compliant</SelectItem>
+                                <SelectItem value="moderate">90-94% Compliant</SelectItem>
+                                <SelectItem value="low">Below 90% Compliant</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* 2. Project */}
+                  <Card className="card">
+                    <div className="card__header">
+                      <h5 className="body-md font-semibold">2. Project</h5>
+                    </div>
+                    <div className="card__body space-y-6">
+                      <div>
+                        <Label className="label">Accountability & Quality - Being fully accountable for deliverables and ensuring timely delivery</Label>
+                        <div className="grid md:grid-cols-2 gap-4 mt-2">
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Target: >85% Positive Feedback (>90% for senior roles)</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={evaluationData.role_fit.ebr_project_feedback || ""}
+                              onChange={(e) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_project_feedback: e.target.value } 
+                              })}
+                              data-testid="project-feedback-input"
+                              className="input"
+                              placeholder="Positive feedback %"
+                            />
+                          </div>
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Quality Assessment</Label>
+                            <Select
+                              value={evaluationData.role_fit.ebr_project_quality || ""}
+                              onValueChange={(value) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_project_quality: value } 
+                              })}
+                            >
+                              <SelectTrigger data-testid="project-quality-select" className="input">
+                                <SelectValue placeholder="Select quality level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="exceptional">Exceptional (>95%)</SelectItem>
+                                <SelectItem value="strong">Strong (90-95%)</SelectItem>
+                                <SelectItem value="meets">Meets Target (85-89%)</SelectItem>
+                                <SelectItem value="below">Below Target (<85%)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* 3. Team/Practice */}
+                  <Card className="card">
+                    <div className="card__header">
+                      <h5 className="body-md font-semibold">3. Team / Practice</h5>
+                    </div>
+                    <div className="card__body space-y-6">
+                      <div>
+                        <Label className="label">Skill Development & Certification - Continuous investment in upskilling and certifications</Label>
+                        <div className="grid md:grid-cols-2 gap-4 mt-2">
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Target: 2 certifications/year (Foundational/Associate) OR 1/year (Advanced/Professional)</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              value={evaluationData.role_fit.ebr_team_certifications || ""}
+                              onChange={(e) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_team_certifications: e.target.value } 
+                              })}
+                              data-testid="team-certifications-input"
+                              className="input"
+                              placeholder="Certifications completed"
+                            />
+                          </div>
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Certification Level</Label>
+                            <Select
+                              value={evaluationData.role_fit.ebr_team_cert_level || ""}
+                              onValueChange={(value) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_team_cert_level: value } 
+                              })}
+                            >
+                              <SelectTrigger data-testid="team-cert-level-select" className="input">
+                                <SelectValue placeholder="Select certification level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="advanced">Advanced/Professional/Specialty</SelectItem>
+                                <SelectItem value="associate">Associate</SelectItem>
+                                <SelectItem value="foundational">Foundational</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="label">Contribution to Practice Maturity</Label>
+                        <Textarea
+                          value={evaluationData.role_fit.ebr_team_contribution || ""}
+                          onChange={(e) => updateEvaluationData({ 
+                            role_fit: { ...evaluationData.role_fit, ebr_team_contribution: e.target.value } 
+                          })}
+                          data-testid="team-contribution-textarea"
+                          className="input min-h-[100px]"
+                          placeholder="Describe contributions to practice maturity: new solutions, design patterns, training sessions, etc."
+                        />
+                      </div>
+
+                      <div>
+                        <Label className="label">Team Engagement & Leadership</Label>
+                        <div className="grid md:grid-cols-2 gap-4 mt-2">
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Target: Team Glint Survey >4% above company rating (for leadership roles)</Label>
+                            <Input
+                              value={evaluationData.role_fit.ebr_team_glint || ""}
+                              onChange={(e) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_team_glint: e.target.value } 
+                              })}
+                              data-testid="team-glint-input"
+                              className="input"
+                              placeholder="Glint survey rating vs company average"
+                            />
+                          </div>
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Leadership Assessment</Label>
+                            <Select
+                              value={evaluationData.role_fit.ebr_team_leadership || ""}
+                              onValueChange={(value) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_team_leadership: value } 
+                              })}
+                            >
+                              <SelectTrigger data-testid="team-leadership-select" className="input">
+                                <SelectValue placeholder="Select leadership level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="exceptional">Exceptional Leader (>6% above company)</SelectItem>
+                                <SelectItem value="strong">Strong Leader (4-6% above company)</SelectItem>
+                                <SelectItem value="developing">Developing Leader (0-4% above company)</SelectItem>
+                                <SelectItem value="needs">Needs Development (below company average)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* 4. Self */}
+                  <Card className="card">
+                    <div className="card__header">
+                      <h5 className="body-md font-semibold">4. Self</h5>
+                    </div>
+                    <div className="card__body space-y-6">
+                      <div>
+                        <Label className="label">Individual Development Planning - Define and follow development activities</Label>
+                        <div className="grid md:grid-cols-2 gap-4 mt-2">
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Target: >80% Individual Goal Attainment</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={evaluationData.role_fit.ebr_self_goal_attainment || ""}
+                              onChange={(e) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_self_goal_attainment: e.target.value } 
+                              })}
+                              data-testid="self-goal-attainment-input"
+                              className="input"
+                              placeholder="Goal attainment %"
+                            />
+                          </div>
+                          <div>
+                            <Label className="body-sm text-[color:var(--text-secondary)]">Development Assessment</Label>
+                            <Select
+                              value={evaluationData.role_fit.ebr_self_development || ""}
+                              onValueChange={(value) => updateEvaluationData({ 
+                                role_fit: { ...evaluationData.role_fit, ebr_self_development: value } 
+                              })}
+                            >
+                              <SelectTrigger data-testid="self-development-select" className="input">
+                                <SelectValue placeholder="Select development level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="exceeds">Exceeds Goals (>90%)</SelectItem>
+                                <SelectItem value="meets">Meets Goals (80-90%)</SelectItem>
+                                <SelectItem value="approaching">Approaching Goals (70-79%)</SelectItem>
+                                <SelectItem value="below">Below Goals (<70%)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="label">Development Plan Progress</Label>
+                        <Textarea
+                          value={evaluationData.role_fit.ebr_self_progress || ""}
+                          onChange={(e) => updateEvaluationData({ 
+                            role_fit: { ...evaluationData.role_fit, ebr_self_progress: e.target.value } 
+                          })}
+                          data-testid="self-progress-textarea"
+                          className="input min-h-[100px]"
+                          placeholder="Describe progress on individual development goals following CJM, success profile, and IDP..."
+                        />
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+                {/* Development Gaps */}
                 <div>
-                  <Label className="label">Identified Gaps</Label>
+                  <Label className="label">Overall Development Gaps & Action Items</Label>
                   <Textarea
                     value={evaluationData.role_fit.gaps?.join('\n') || ''}
                     onChange={(e) => updateEvaluationData({ 
@@ -988,7 +1276,7 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
                     })}
                     data-testid="role-fit-gaps"
                     className="input min-h-[120px]"
-                    placeholder="List gaps to address for role progression (one per line)..."
+                    placeholder="List specific development gaps and action items based on EBR assessment (one per line)..."
                   />
                 </div>
               </TabsContent>
