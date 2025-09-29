@@ -120,7 +120,7 @@ function EvaluationForm() {
           const initialCompetencies = rubricsData[0].competencies.map(comp => ({
             key: comp.key,
             name: comp.name,
-            score: 3,
+            score: 3, // Default to "Solid" rating
             evidence: ""
           }));
           
