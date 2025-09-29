@@ -36,13 +36,142 @@ function EvaluationForm() {
   const { menteeId, cycleId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [evaluation, setEvaluation] = useState(null);
+  const [mentee, setMentee] = useState(null);
+  const [cycle, setCycle] = useState(null);
+  const [rubrics, setRubrics] = useState([]);
+  const [aiAnalysis, setAiAnalysis] = useState({ items: [], rubric_alignment: [], missing_fields: [] });
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // Initialize evaluation state
+  const [evaluationData, setEvaluationData] = useState({
+    competencies: [],
+    idp: {
+      goals: [],
+      progress_notes: ""
+    },
+    certifications: [],
+    role_fit: {
+      current_role: "",
+      next_role: "",
+      fit_current: 3,
+      fit_next: 3,
+      gaps: []
+    },
+    pm_feedback: {
+      comments: "",
+      strengths: [],
+      areas_to_improve: []
+    },
+    talent_assessment: {
+      potential: "medium",
+      risk: "low", 
+      overall: "good"
+    }
+  });
+
+  // Debounced save function
+  const debouncedSave = useDebounce(async (data) => {
+    try {
+      setSaving(true);
+      await api.patch(`/evaluations/${cycleId}`, data);
+      // Optionally trigger AI analysis
+      analyzeEvaluation(data);
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+      toast.error('Failed to save changes');
+    } finally {
+      setSaving(false);
+    }
+  }, 1000);
+
+  // AI Analysis function
+  const analyzeEvaluation = async (data) => {
+    try {
+      const analysis = await api.post('/ai/analyze', {
+        evaluation_data: data,
+        cycle_id: cycleId
+      });
+      setAiAnalysis(analysis);
+    } catch (error) {
+      console.error('AI analysis failed:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const evaluationData = await api.get(`/evaluations/${cycleId}`);
+        const [evaluationData, menteeData, cycleData, rubricsData] = await Promise.all([
+          api.get(`/evaluations/${cycleId}`),
+          api.get(`/mentees/${menteeId}`),
+          api.get(`/cycles/${cycleId}`),
+          api.get('/rubrics')
+        ]);
+        
         setEvaluation(evaluationData);
+        setMentee(menteeData);
+        setCycle(cycleData);
+        setRubrics(rubricsData);
+        
+        // Initialize competencies from rubric if empty
+        if (evaluationData.competencies?.length === 0 && rubricsData.length > 0) {
+          const initialCompetencies = rubricsData[0].competencies.map(comp => ({
+            key: comp.key,
+            name: comp.name,
+            score: 3,
+            evidence: ""
+          }));
+          
+          const initialData = {
+            ...evaluationData,
+            competencies: initialCompetencies,
+            idp: evaluationData.idp || { goals: [], progress_notes: "" },
+            certifications: evaluationData.certifications || [],
+            role_fit: evaluationData.role_fit || {
+              current_role: menteeData.role || "",
+              next_role: "",
+              fit_current: 3,
+              fit_next: 3,
+              gaps: []
+            },
+            pm_feedback: evaluationData.pm_feedback || {
+              comments: "",
+              strengths: [],
+              areas_to_improve: []
+            },
+            talent_assessment: evaluationData.talent_assessment || {
+              potential: "medium",
+              risk: "low",
+              overall: "good"
+            }
+          };
+          
+          setEvaluationData(initialData);
+        } else {
+          setEvaluationData({
+            competencies: evaluationData.competencies || [],
+            idp: evaluationData.idp || { goals: [], progress_notes: "" },
+            certifications: evaluationData.certifications || [],
+            role_fit: evaluationData.role_fit || {
+              current_role: menteeData.role || "",
+              next_role: "",
+              fit_current: 3,
+              fit_next: 3,
+              gaps: []
+            },
+            pm_feedback: evaluationData.pm_feedback || {
+              comments: "",
+              strengths: [],
+              areas_to_improve: []
+            },
+            talent_assessment: evaluationData.talent_assessment || {
+              potential: "medium",
+              risk: "low",
+              overall: "good"
+            }
+          });
+        }
       } catch (error) {
         toast.error('Failed to load evaluation data');
         console.error('Error fetching evaluation:', error);
@@ -52,7 +181,28 @@ function EvaluationForm() {
     };
 
     fetchData();
-  }, [cycleId]);
+  }, [cycleId, menteeId]);
+
+  // Update evaluation data and trigger save
+  const updateEvaluationData = (updates) => {
+    const newData = { ...evaluationData, ...updates };
+    setEvaluationData(newData);
+    debouncedSave(newData);
+  };
+
+  // Competency score update
+  const updateCompetencyScore = (index, score) => {
+    const newCompetencies = [...evaluationData.competencies];
+    newCompetencies[index] = { ...newCompetencies[index], score: score[0] };
+    updateEvaluationData({ competencies: newCompetencies });
+  };
+
+  // Competency evidence update
+  const updateCompetencyEvidence = (index, evidence) => {
+    const newCompetencies = [...evaluationData.competencies];
+    newCompetencies[index] = { ...newCompetencies[index], evidence };
+    updateEvaluationData({ competencies: newCompetencies });
+  };
 
   if (loading) {
     return (
