@@ -69,7 +69,21 @@ function EvaluationForm() {
       next_role: "",
       fit_current: 3,
       fit_next: 3,
-      gaps: []
+      gaps: [],
+      // EBR Framework fields
+      ebr_organization_utilization: "",
+      ebr_organization_engagement: "",
+      ebr_organization_compliance: "",
+      ebr_project_feedback: "",
+      ebr_project_quality: "",
+      ebr_team_certifications: "",
+      ebr_team_cert_level: "",
+      ebr_team_contribution: "",
+      ebr_team_glint: "",
+      ebr_team_leadership: "",
+      ebr_self_goal_attainment: "",
+      ebr_self_development: "",
+      ebr_self_progress: ""
     },
     pm_feedback: {
       comments: "",
