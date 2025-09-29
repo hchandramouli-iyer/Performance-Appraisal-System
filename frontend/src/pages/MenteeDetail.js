@@ -139,17 +139,95 @@ function MenteeDetail() {
       <Card className="card">
         <div className="card__header flex items-center justify-between">
           <h3 className="h3">Evaluation Cycles</h3>
-          <Button 
-            data-testid="create-cycle-button"
-            className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white"
-            onClick={() => {
-              // For now, just show a toast - will implement cycle creation later
-              toast.info('Cycle creation coming soon!');
-            }}
-          >
-            <Plus size={18} />
-            New Cycle
-          </Button>
+          <Dialog open={cycleDialogOpen} onOpenChange={setCycleDialogOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                data-testid="create-cycle-button"
+                className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white"
+              >
+                <Plus size={18} />
+                New Cycle
+              </Button>
+            </DialogTrigger>
+            <DialogContent data-testid="create-cycle-dialog">
+              <DialogHeader>
+                <DialogTitle className="h3">Create New Evaluation Cycle</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleCycleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="period_label" className="label">Period Label</Label>
+                  <Input
+                    id="period_label"
+                    name="period_label"
+                    value={cycleFormData.period_label}
+                    onChange={handleCycleChange}
+                    data-testid="cycle-period-input"
+                    className="input"
+                    placeholder="e.g., Q1 2024 Review"
+                    required
+                  />
+                </div>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="start_date" className="label">Start Date</Label>
+                    <Input
+                      id="start_date"
+                      name="start_date"
+                      type="date"
+                      value={cycleFormData.start_date}
+                      onChange={handleCycleChange}
+                      data-testid="cycle-start-date-input"
+                      className="input"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="end_date" className="label">End Date</Label>
+                    <Input
+                      id="end_date"
+                      name="end_date"
+                      type="date"
+                      value={cycleFormData.end_date}
+                      onChange={handleCycleChange}
+                      data-testid="cycle-end-date-input"
+                      className="input"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label className="label">Status</Label>
+                  <Select value={cycleFormData.status} onValueChange={handleStatusChange}>
+                    <SelectTrigger data-testid="cycle-status-select" className="input">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="closed">Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex justify-end gap-3 pt-4">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setCycleDialogOpen(false)}
+                    data-testid="cancel-create-cycle-button"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit"
+                    data-testid="submit-create-cycle-button"
+                    className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white"
+                  >
+                    Create Cycle
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="card__body">
           {cycles.length === 0 ? (
