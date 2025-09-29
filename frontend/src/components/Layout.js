@@ -24,7 +24,7 @@ function Layout({ children }) {
             href="/" 
             className="h4 text-[color:var(--text-primary)] hover:text-[color:var(--brand)] transition-colors"
           >
-            Axis Performance
+            Talent Fluency
           </a>
           
           <nav data-testid="main-nav" className="ml-auto hidden md:flex items-center gap-2">
