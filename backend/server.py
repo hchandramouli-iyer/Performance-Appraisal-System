@@ -122,9 +122,22 @@ class Goal(BaseModel):
     description: str
     target_date: Optional[datetime] = None
 
+class SelfReflection(BaseModel):
+    key_strengths: Optional[str] = None
+    passions: Optional[str] = None
+    development_opportunities: Optional[str] = None
+    proud_accomplishments: Optional[str] = None
+
+class DevelopmentGoals(BaseModel):
+    teksystems_roles: Optional[str] = None
+    professional_goals: Optional[str] = None
+    personal_goals: Optional[str] = None
+
 class IDP(BaseModel):
-    goals: List[Goal] = []
+    goals: List[Goal] = []  # Keep existing goals for backward compatibility
     progress_notes: Optional[str] = None
+    self_reflection: Optional[SelfReflection] = None
+    development_goals: Optional[DevelopmentGoals] = None
 
 class Certification(BaseModel):
     name: str
