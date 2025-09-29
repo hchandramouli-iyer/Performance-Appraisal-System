@@ -114,7 +114,7 @@ class CycleUpdate(BaseModel):
 class CompetencyScore(BaseModel):
     key: str
     name: str
-    score: int = Field(ge=0, le=5)  # 0-5 range
+    score: int = Field(ge=1, le=5)  # 1-5 range for radio buttons
     evidence: Optional[str] = None
 
 class Goal(BaseModel):
