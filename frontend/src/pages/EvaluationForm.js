@@ -1283,7 +1283,7 @@ Example: 'Led implementation of new AWS Glue data pipeline that reduced processi
                                 <SelectItem value="exceeds">Exceeds Goals (>90%)</SelectItem>
                                 <SelectItem value="meets">Meets Goals (80-90%)</SelectItem>
                                 <SelectItem value="approaching">Approaching Goals (70-79%)</SelectItem>
-                                <SelectItem value="below">Below Goals (<70%)</SelectItem>
+                                <SelectItem value="below">Below Goals (&lt;70%)</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
