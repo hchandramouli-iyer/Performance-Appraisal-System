@@ -1,9 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Slider } from "@/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ArrowLeft, Brain, Save, FileText, Clock, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+
+// Create a debounced save hook
+const useDebounce = (callback, delay) => {
+  const [debounceTimer, setDebounceTimer] = useState(null);
+
+  const debouncedCallback = useCallback((...args) => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+    const newTimer = setTimeout(() => {
+      callback(...args);
+    }, delay);
+    setDebounceTimer(newTimer);
+  }, [callback, delay, debounceTimer]);
+
+  return debouncedCallback;
+};
 
 function EvaluationForm() {
   const { menteeId, cycleId } = useParams();
