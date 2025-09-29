@@ -138,7 +138,21 @@ function EvaluationForm() {
           const initialData = {
             ...evaluationData,
             competencies: initialCompetencies,
-            idp: evaluationData.idp || { goals: [], progress_notes: "" },
+            idp: {
+              goals: evaluationData.idp?.goals || [],
+              progress_notes: evaluationData.idp?.progress_notes || "",
+              self_reflection: evaluationData.idp?.self_reflection || {
+                key_strengths: "",
+                passions: "",
+                development_opportunities: "",
+                proud_accomplishments: ""
+              },
+              development_goals: evaluationData.idp?.development_goals || {
+                teksystems_roles: "",
+                professional_goals: "",
+                personal_goals: ""
+              }
+            },
             certifications: evaluationData.certifications || [],
             role_fit: evaluationData.role_fit || {
               current_role: menteeData.role || "",
