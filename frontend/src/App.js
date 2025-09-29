@@ -18,6 +18,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/mentee/:menteeId" element={<MenteeDetail />} />
             <Route path="/mentee/:menteeId/cycle/:cycleId/evaluate" element={<EvaluationForm />} />
+            <Route path="/mentee/:menteeId/cycle/:cycleId/report" element={<ReportView />} />
             <Route path="/reports" element={<Reports />} />
           </Routes>
         </Layout>
