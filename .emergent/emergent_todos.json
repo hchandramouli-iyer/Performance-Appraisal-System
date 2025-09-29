@@ -1,15 +1,11 @@
 [
   {
-    "content": "Install required Python dependencies (emergentintegrations, datetime, etc.)",
+    "content": "Install required frontend dependencies (recharts, framer-motion, lucide-react)",
     "status": "completed"
   },
   {
-    "content": "Install required frontend dependencies (recharts, framer-motion, lucide-react)",
-    "status": "in_progress"
-  },
-  {
     "content": "Create backend domain models (Pydantic models for mentees, cycles, evaluations, etc.)",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Implement core backend API endpoints for mentees and cycles",
