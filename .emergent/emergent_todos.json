@@ -1,11 +1,11 @@
 [
   {
     "content": "Implement cycle creation functionality in mentee detail view",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Build comprehensive evaluation form with tabbed sections",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Create competency evaluation with sliders and evidence fields",
