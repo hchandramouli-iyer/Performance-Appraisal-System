@@ -17,6 +17,13 @@ function MenteeDetail() {
   const [mentee, setMentee] = useState(null);
   const [cycles, setCycles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cycleDialogOpen, setCycleDialogOpen] = useState(false);
+  const [cycleFormData, setCycleFormData] = useState({
+    period_label: "",
+    start_date: "",
+    end_date: "",
+    status: "active"
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +44,46 @@ function MenteeDetail() {
 
     fetchData();
   }, [menteeId]);
+
+  const handleCycleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Convert date strings to ISO format
+      const cycleData = {
+        ...cycleFormData,
+        start_date: new Date(cycleFormData.start_date).toISOString(),
+        end_date: new Date(cycleFormData.end_date).toISOString()
+      };
+      
+      const newCycle = await api.post(`/mentees/${menteeId}/cycles`, cycleData);
+      setCycles([...cycles, newCycle]);
+      setCycleFormData({
+        period_label: "",
+        start_date: "",
+        end_date: "",
+        status: "active"
+      });
+      setCycleDialogOpen(false);
+      toast.success('Evaluation cycle created successfully');
+    } catch (error) {
+      toast.error('Failed to create cycle');
+      console.error('Error creating cycle:', error);
+    }
+  };
+
+  const handleCycleChange = (e) => {
+    setCycleFormData({
+      ...cycleFormData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleStatusChange = (value) => {
+    setCycleFormData({
+      ...cycleFormData,
+      status: value
+    });
+  };
 
   if (loading) {
     return (
