@@ -180,7 +180,7 @@ export function AppHeader() {
   return (
     <header data-testid="app-header" className="sticky top-0 z-40 bg-[var(--bg-card)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg-card)/.8] border-b border-[var(--border-light)]">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-4">
-        <a data-testid="brand-home-link" href="/" className="h4 text-[color:var(--text-primary)]">Axis Performance</a>
+        <a data-testid="brand-home-link" href="/" className="h4 text-[color:var(--text-primary)]">Talent Fluency</a>
         <nav data-testid="main-nav" className="ml-auto hidden md:flex items-center gap-2">
           <a data-testid="nav-dashboard-link" className="px-3 py-2 rounded-md hover:bg-[color:var(--brand-50)]" href="/dashboard">Dashboard</a>
           <a data-testid="nav-reports-link" className="px-3 py-2 rounded-md hover:bg-[color:var(--brand-50)]" href="/reports">Reports</a>
