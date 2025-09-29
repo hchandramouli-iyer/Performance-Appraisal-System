@@ -1,4 +1,4 @@
-# Axis Performance Design System (Performance Appraisal & Mentee Management)
+# Talent Fluency Design System (Performance Appraisal & Mentee Management)
 
 A. CORE RESTRICTIONS & DESIGN PHILOSOPHY
 - Primary Rule: 90/10 Color Rule
