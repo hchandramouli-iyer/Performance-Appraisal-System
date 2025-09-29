@@ -1,15 +1,11 @@
 [
   {
-    "content": "Verify supervisor services and environment setup",
+    "content": "Add global design tokens and typography to frontend CSS",
     "status": "completed"
   },
   {
-    "content": "Add global design tokens and typography to frontend CSS",
-    "status": "in_progress"
-  },
-  {
     "content": "Install required Python dependencies (emergentintegrations, datetime, etc.)",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Install required frontend dependencies (recharts, framer-motion, lucide-react)",
