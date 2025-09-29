@@ -455,7 +455,7 @@ export function Footer() {
     <footer data-testid="app-footer" className="pt-8 border-t border-[var(--border-light)]">
       <div className="container grid md:grid-cols-4 gap-6 pb-8">
         <div>
-          <div className="h4">Axis Performance</div>
+          <div className="h4">Talent Fluency</div>
           <p className="body-sm mt-2">Professional appraisals for modern teams.</p>
         </div>
         <nav className="grid gap-2">
