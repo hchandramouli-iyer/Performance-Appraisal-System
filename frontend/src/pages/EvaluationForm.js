@@ -475,96 +475,251 @@ function EvaluationForm() {
               </TabsContent>
 
               {/* IDP Tab */}
-              <TabsContent value="idp" data-testid="idp-content" className="space-y-6">
+              <TabsContent value="idp" data-testid="idp-content" className="space-y-8">
                 <div>
                   <h3 className="h3 mb-4">Individual Development Plan (IDP)</h3>
                   <p className="body-md text-[color:var(--text-secondary)] mb-6">
-                    Define development goals and track progress.
+                    Complete your self-reflection and define your development goals.
                   </p>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <Label className="label">Development Goals</Label>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        const newGoals = [...(evaluationData.idp.goals || []), { title: "", description: "", target_date: null }];
-                        updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
-                      }}
-                      data-testid="add-idp-goal-button"
-                      className="mb-3"
-                    >
-                      Add Goal
-                    </Button>
-                    
-                    <div className="space-y-3">
-                      {evaluationData.idp.goals?.map((goal, index) => (
-                        <Card key={index} className="card" data-testid={`idp-goal-${index}-card`}>
-                          <div className="card__body space-y-3">
-                            <Input
-                              value={goal.title}
-                              onChange={(e) => {
-                                const newGoals = [...evaluationData.idp.goals];
-                                newGoals[index] = { ...newGoals[index], title: e.target.value };
-                                updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
-                              }}
-                              placeholder="Goal title"
-                              data-testid={`idp-goal-${index}-title`}
-                              className="input"
-                            />
-                            <Textarea
-                              value={goal.description}
-                              onChange={(e) => {
-                                const newGoals = [...evaluationData.idp.goals];
-                                newGoals[index] = { ...newGoals[index], description: e.target.value };
-                                updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
-                              }}
-                              placeholder="Goal description and action steps"
-                              data-testid={`idp-goal-${index}-description`}
-                              className="input min-h-[80px]"
-                            />
-                            <div className="flex justify-between items-center">
-                              <Input
-                                type="date"
-                                value={goal.target_date ? new Date(goal.target_date).toISOString().split('T')[0] : ''}
-                                onChange={(e) => {
-                                  const newGoals = [...evaluationData.idp.goals];
-                                  newGoals[index] = { ...newGoals[index], target_date: e.target.value ? new Date(e.target.value).toISOString() : null };
-                                  updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
-                                }}
-                                data-testid={`idp-goal-${index}-target-date`}
-                                className="input max-w-xs"
-                              />
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => {
-                                  const newGoals = evaluationData.idp.goals.filter((_, i) => i !== index);
-                                  updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
-                                }}
-                                data-testid={`remove-idp-goal-${index}-button`}
-                              >
-                                Remove
-                              </Button>
-                            </div>
-                          </div>
-                        </Card>
-                      )) || []}
+                {/* A. Current State: Self Reflection */}
+                <Card className="card">
+                  <div className="card__header">
+                    <h4 className="h4">A. Current State: Self Reflection</h4>
+                  </div>
+                  <div className="card__body space-y-6">
+                    <div>
+                      <Label className="label">1. What do you consider your key strengths?</Label>
+                      <Textarea
+                        value={evaluationData.idp.self_reflection?.key_strengths || ""}
+                        onChange={(e) => updateEvaluationData({ 
+                          idp: { 
+                            ...evaluationData.idp, 
+                            self_reflection: {
+                              ...evaluationData.idp.self_reflection,
+                              key_strengths: e.target.value
+                            }
+                          } 
+                        })}
+                        data-testid="idp-key-strengths"
+                        className="input min-h-[100px]"
+                        placeholder="Describe your key strengths and core competencies..."
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="label">2. What are you most passionate about?</Label>
+                      <Textarea
+                        value={evaluationData.idp.self_reflection?.passions || ""}
+                        onChange={(e) => updateEvaluationData({ 
+                          idp: { 
+                            ...evaluationData.idp, 
+                            self_reflection: {
+                              ...evaluationData.idp.self_reflection,
+                              passions: e.target.value
+                            }
+                          } 
+                        })}
+                        data-testid="idp-passions"
+                        className="input min-h-[100px]"
+                        placeholder="Share what motivates and excites you in your work..."
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="label">3. What development opportunities do you have?</Label>
+                      <Textarea
+                        value={evaluationData.idp.self_reflection?.development_opportunities || ""}
+                        onChange={(e) => updateEvaluationData({ 
+                          idp: { 
+                            ...evaluationData.idp, 
+                            self_reflection: {
+                              ...evaluationData.idp.self_reflection,
+                              development_opportunities: e.target.value
+                            }
+                          } 
+                        })}
+                        data-testid="idp-development-opportunities"
+                        className="input min-h-[100px]"
+                        placeholder="Identify areas where you see opportunities for growth and improvement..."
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="label">4. What accomplishments are you most proud of and why?</Label>
+                      <Textarea
+                        value={evaluationData.idp.self_reflection?.proud_accomplishments || ""}
+                        onChange={(e) => updateEvaluationData({ 
+                          idp: { 
+                            ...evaluationData.idp, 
+                            self_reflection: {
+                              ...evaluationData.idp.self_reflection,
+                              proud_accomplishments: e.target.value
+                            }
+                          } 
+                        })}
+                        data-testid="idp-proud-accomplishments"
+                        className="input min-h-[100px]"
+                        placeholder="Describe your key accomplishments and what made them meaningful to you..."
+                      />
                     </div>
                   </div>
-                  
-                  <div>
-                    <Label className="label">Progress Notes</Label>
-                    <Textarea
-                      value={evaluationData.idp.progress_notes || ""}
-                      onChange={(e) => updateEvaluationData({ idp: { ...evaluationData.idp, progress_notes: e.target.value } })}
-                      data-testid="idp-progress-notes"
-                      className="input min-h-[120px]"
-                      placeholder="Notes on progress toward development goals..."
-                    />
+                </Card>
+
+                {/* B. Future State: Development Goals */}
+                <Card className="card">
+                  <div className="card__header">
+                    <h4 className="h4">B. Future State: Development Goals</h4>
                   </div>
-                </div>
+                  <div className="card__body space-y-6">
+                    <div>
+                      <Label className="label">1. What TEKsystems roles are you interested in?</Label>
+                      <Textarea
+                        value={evaluationData.idp.development_goals?.teksystems_roles || ""}
+                        onChange={(e) => updateEvaluationData({ 
+                          idp: { 
+                            ...evaluationData.idp, 
+                            development_goals: {
+                              ...evaluationData.idp.development_goals,
+                              teksystems_roles: e.target.value
+                            }
+                          } 
+                        })}
+                        data-testid="idp-teksystems-roles"
+                        className="input min-h-[100px]"
+                        placeholder="Describe specific TEKsystems roles or career paths that interest you..."
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="label">2. What are the professional goals that you would like to accomplish in the next 6 to 12 months?</Label>
+                      <Textarea
+                        value={evaluationData.idp.development_goals?.professional_goals || ""}
+                        onChange={(e) => updateEvaluationData({ 
+                          idp: { 
+                            ...evaluationData.idp, 
+                            development_goals: {
+                              ...evaluationData.idp.development_goals,
+                              professional_goals: e.target.value
+                            }
+                          } 
+                        })}
+                        data-testid="idp-professional-goals"
+                        className="input min-h-[120px]"
+                        placeholder="Outline your short-term professional objectives, skill development, certifications, or project goals..."
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="label">3. What are the personal goals that you would like to accomplish in the next 6 to 12 months?</Label>
+                      <Textarea
+                        value={evaluationData.idp.development_goals?.personal_goals || ""}
+                        onChange={(e) => updateEvaluationData({ 
+                          idp: { 
+                            ...evaluationData.idp, 
+                            development_goals: {
+                              ...evaluationData.idp.development_goals,
+                              personal_goals: e.target.value
+                            }
+                          } 
+                        })}
+                        data-testid="idp-personal-goals"
+                        className="input min-h-[120px]"
+                        placeholder="Share your personal development goals, work-life balance objectives, or learning aspirations..."
+                      />
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Legacy Goals Section (Keep for backward compatibility) */}
+                <Card className="card">
+                  <div className="card__header">
+                    <h4 className="h4">Additional Development Goals (Optional)</h4>
+                  </div>
+                  <div className="card__body space-y-4">
+                    <div>
+                      <Label className="label">Specific Development Goals</Label>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          const newGoals = [...(evaluationData.idp.goals || []), { title: "", description: "", target_date: null }];
+                          updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
+                        }}
+                        data-testid="add-idp-goal-button"
+                        className="mb-3"
+                      >
+                        Add Goal
+                      </Button>
+                      
+                      <div className="space-y-3">
+                        {evaluationData.idp.goals?.map((goal, index) => (
+                          <Card key={index} className="card" data-testid={`idp-goal-${index}-card`}>
+                            <div className="card__body space-y-3">
+                              <Input
+                                value={goal.title}
+                                onChange={(e) => {
+                                  const newGoals = [...evaluationData.idp.goals];
+                                  newGoals[index] = { ...newGoals[index], title: e.target.value };
+                                  updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
+                                }}
+                                placeholder="Goal title"
+                                data-testid={`idp-goal-${index}-title`}
+                                className="input"
+                              />
+                              <Textarea
+                                value={goal.description}
+                                onChange={(e) => {
+                                  const newGoals = [...evaluationData.idp.goals];
+                                  newGoals[index] = { ...newGoals[index], description: e.target.value };
+                                  updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
+                                }}
+                                placeholder="Goal description and action steps"
+                                data-testid={`idp-goal-${index}-description`}
+                                className="input min-h-[80px]"
+                              />
+                              <div className="flex justify-between items-center">
+                                <Input
+                                  type="date"
+                                  value={goal.target_date ? new Date(goal.target_date).toISOString().split('T')[0] : ''}
+                                  onChange={(e) => {
+                                    const newGoals = [...evaluationData.idp.goals];
+                                    newGoals[index] = { ...newGoals[index], target_date: e.target.value ? new Date(e.target.value).toISOString() : null };
+                                    updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
+                                  }}
+                                  data-testid={`idp-goal-${index}-target-date`}
+                                  className="input max-w-xs"
+                                />
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={() => {
+                                    const newGoals = evaluationData.idp.goals.filter((_, i) => i !== index);
+                                    updateEvaluationData({ idp: { ...evaluationData.idp, goals: newGoals } });
+                                  }}
+                                  data-testid={`remove-idp-goal-${index}-button`}
+                                >
+                                  Remove
+                                </Button>
+                              </div>
+                            </div>
+                          </Card>
+                        )) || []}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label className="label">Progress Notes</Label>
+                      <Textarea
+                        value={evaluationData.idp.progress_notes || ""}
+                        onChange={(e) => updateEvaluationData({ idp: { ...evaluationData.idp, progress_notes: e.target.value } })}
+                        data-testid="idp-progress-notes"
+                        className="input min-h-[120px]"
+                        placeholder="Notes on progress toward development goals..."
+                      />
+                    </div>
+                  </div>
+                </Card>
               </TabsContent>
 
               {/* Certifications Tab */}
