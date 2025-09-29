@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import Dashboard from "@/pages/Dashboard";
 import MenteeDetail from "@/pages/MenteeDetail";
 import EvaluationForm from "@/pages/EvaluationForm";
+import ReportView from "@/pages/ReportView";
 import Reports from "@/pages/Reports";
 import "@/App.css";
 
