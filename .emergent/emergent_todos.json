@@ -1,10 +1,6 @@
 [
   {
-    "content": "Build report generation and PDF export functionality",
-    "status": "completed"
-  },
-  {
     "content": "Add competency radar charts and analytics",
-    "status": "in_progress"
+    "status": "completed"
   }
 ]
