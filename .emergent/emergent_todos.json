@@ -1,11 +1,11 @@
 [
   {
     "content": "Verify supervisor services and environment setup",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Add global design tokens and typography to frontend CSS",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Install required Python dependencies (emergentintegrations, datetime, etc.)",
