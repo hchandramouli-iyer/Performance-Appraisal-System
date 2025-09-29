@@ -528,33 +528,152 @@ async def get_rubrics():
     
     return [default_rubric]
 
-# AI Analysis Routes (Stub for now)
+# AI Analysis Routes
 @api_router.post("/ai/analyze", response_model=AIAnalysisResponse)
 async def analyze_evaluation(request: AIAnalysisRequest):
-    """Real-time AI analysis of evaluation data - stub implementation"""
-    # For now, return mock feedback
-    mock_items = []
-    
-    if request.evaluation_data.get("competencies"):
-        scores = [comp.get("score", 0) for comp in request.evaluation_data["competencies"]]
-        if scores:
-            avg_score = sum(scores) / len(scores)
-            if avg_score < 2:
-                mock_items.append(AIFeedbackItem(
-                    type="risk",
-                    text="Low competency scores may indicate need for additional support"
-                ))
-            elif avg_score > 4:
-                mock_items.append(AIFeedbackItem(
-                    type="success", 
-                    text="Strong competency performance across multiple areas"
-                ))
-    
-    return AIAnalysisResponse(
-        items=mock_items,
-        rubric_alignment=["Competency scores align with provided evidence"],
-        missing_fields=[]
-    )
+    """Real-time AI analysis of evaluation data using Emergent LLM"""
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        import os
+        
+        # Get Emergent LLM key
+        emergent_key = "sk-emergent-a1598F1D1052dA76f2"
+        
+        # Initialize LLM chat
+        chat = LlmChat(
+            api_key=emergent_key,
+            session_id=f"evaluation-{request.cycle_id}",
+            system_message="""You are an AI performance evaluation assistant. Analyze evaluation data and provide helpful insights.
+
+Your role is to:
+1. Identify patterns in competency scores
+2. Suggest improvements for evidence quality  
+3. Flag potential risks or concerns
+4. Provide constructive feedback
+5. Highlight strengths and achievements
+
+Respond with specific, actionable insights based on the evaluation data provided."""
+        ).with_model("openai", "gpt-4o")
+        
+        # Prepare evaluation data for analysis
+        eval_data = request.evaluation_data
+        analysis_prompt = "Analyze this performance evaluation data:\n\n"
+        
+        # Add competency analysis
+        if eval_data.get("competencies"):
+            analysis_prompt += "COMPETENCY SCORES:\n"
+            for comp in eval_data["competencies"]:
+                analysis_prompt += f"- {comp.get('name', 'Unknown')}: {comp.get('score', 0)}/5\n"
+                if comp.get('evidence'):
+                    analysis_prompt += f"  Evidence: {comp['evidence'][:200]}...\n"
+            analysis_prompt += "\n"
+        
+        # Add other sections
+        if eval_data.get("idp", {}).get("goals"):
+            analysis_prompt += f"IDP GOALS: {len(eval_data['idp']['goals'])} goals set\n"
+        
+        if eval_data.get("role_fit"):
+            rf = eval_data["role_fit"]
+            analysis_prompt += f"ROLE FIT: Current={rf.get('fit_current', 0)}/5, Next={rf.get('fit_next', 0)}/5\n"
+        
+        if eval_data.get("talent_assessment"):
+            ta = eval_data["talent_assessment"]
+            analysis_prompt += f"TALENT ASSESSMENT: Potential={ta.get('potential', 'Unknown')}, Risk={ta.get('risk', 'Unknown')}, Overall={ta.get('overall', 'Unknown')}\n"
+        
+        analysis_prompt += "\nPlease provide:\n1. Key insights (2-3 points)\n2. Areas of strength\n3. Areas for improvement\n4. Any risk flags\n5. Missing evidence or data gaps\n\nKeep responses concise and actionable."
+        
+        # Get AI analysis
+        user_message = UserMessage(text=analysis_prompt)
+        ai_response = await chat.send_message(user_message)
+        
+        # Parse AI response into structured format
+        response_text = ai_response if isinstance(ai_response, str) else str(ai_response)
+        
+        # Extract insights from AI response
+        items = []
+        rubric_alignment = []
+        missing_fields = []
+        
+        # Simple parsing logic for the AI response
+        lines = response_text.split('\n')
+        current_section = None
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+                
+            if any(keyword in line.lower() for keyword in ['strength', 'positive', 'excellent', 'strong']):
+                items.append(AIFeedbackItem(type="success", text=line))
+            elif any(keyword in line.lower() for keyword in ['risk', 'concern', 'warning', 'issue']):
+                items.append(AIFeedbackItem(type="risk", text=line))
+            elif any(keyword in line.lower() for keyword in ['suggest', 'improve', 'consider', 'recommend']):
+                items.append(AIFeedbackItem(type="suggestion", text=line))
+            elif len(line) > 20:  # General insight
+                items.append(AIFeedbackItem(type="suggestion", text=line))
+        
+        # Add some basic rubric alignment checks
+        if eval_data.get("competencies"):
+            scores = [comp.get("score", 0) for comp in eval_data["competencies"]]
+            avg_score = sum(scores) / len(scores) if scores else 0
+            
+            if avg_score >= 4:
+                rubric_alignment.append("Strong performance across competencies")
+            elif avg_score >= 3:
+                rubric_alignment.append("Solid competency performance with room for growth")
+            else:
+                rubric_alignment.append("Competency scores suggest need for focused development")
+        
+        # Check for missing evidence
+        if eval_data.get("competencies"):
+            missing_evidence = [comp.get("name", "Unknown") for comp in eval_data["competencies"] 
+                             if not comp.get("evidence")]
+            if missing_evidence:
+                missing_fields.extend([f"Evidence needed for {comp}" for comp in missing_evidence[:3]])
+        
+        # Ensure we have at least some feedback
+        if not items:
+            items.append(AIFeedbackItem(
+                type="suggestion", 
+                text="Continue adding evaluation details for more comprehensive AI analysis."
+            ))
+        
+        return AIAnalysisResponse(
+            items=items[:5],  # Limit to 5 items
+            rubric_alignment=rubric_alignment,
+            missing_fields=missing_fields[:3]  # Limit to 3 missing fields
+        )
+        
+    except Exception as e:
+        logger.error(f"AI analysis failed: {str(e)}")
+        # Fallback to basic analysis
+        items = []
+        
+        if request.evaluation_data.get("competencies"):
+            scores = [comp.get("score", 0) for comp in request.evaluation_data["competencies"]]
+            if scores:
+                avg_score = sum(scores) / len(scores)
+                if avg_score < 2:
+                    items.append(AIFeedbackItem(
+                        type="risk",
+                        text="Low competency scores may indicate need for additional support"
+                    ))
+                elif avg_score > 4:
+                    items.append(AIFeedbackItem(
+                        type="success", 
+                        text="Strong competency performance across multiple areas"
+                    ))
+                else:
+                    items.append(AIFeedbackItem(
+                        type="suggestion",
+                        text="Consider adding more specific evidence examples for higher scores"
+                    ))
+        
+        return AIAnalysisResponse(
+            items=items,
+            rubric_alignment=["AI analysis temporarily unavailable"],
+            missing_fields=[]
+        )
 
 # Reports Routes (Placeholder)
 @api_router.get("/reports/{cycle_id}", response_model=Report)
