@@ -50,7 +50,18 @@ function EvaluationForm() {
     competencies: [],
     idp: {
       goals: [],
-      progress_notes: ""
+      progress_notes: "",
+      self_reflection: {
+        key_strengths: "",
+        passions: "",
+        development_opportunities: "",
+        proud_accomplishments: ""
+      },
+      development_goals: {
+        teksystems_roles: "",
+        professional_goals: "",
+        personal_goals: ""
+      }
     },
     certifications: [],
     role_fit: {
