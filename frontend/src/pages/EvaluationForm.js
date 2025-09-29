@@ -427,9 +427,40 @@ function EvaluationForm() {
               <TabsContent value="competencies" data-testid="competencies-content" className="space-y-6">
                 <div>
                   <h3 className="h3 mb-4">Competency Evaluation</h3>
-                  <p className="body-md text-[color:var(--text-secondary)] mb-6">
-                    Rate each competency on a scale of 0-5 and provide evidence and examples.
+                  <p className="body-md text-[color:var(--text-secondary)] mb-4">
+                    Rate each competency on a scale of 1-5 and provide specific evidence and examples.
                   </p>
+                  
+                  {/* Rating Scale Legend */}
+                  <Card className="card mb-6">
+                    <div className="card__header">
+                      <h4 className="h4">Rating Scale Guide</h4>
+                    </div>
+                    <div className="card__body">
+                      <div className="grid md:grid-cols-5 gap-4 text-center">
+                        <div className="p-3 bg-[color:var(--accent-danger)]/10 rounded-[var(--radius-sm)]">
+                          <div className="font-semibold text-[color:var(--accent-danger)] mb-1">1 - Concerning</div>
+                          <p className="body-sm text-[color:var(--text-secondary)]">Implies a deficiency or need for significant development</p>
+                        </div>
+                        <div className="p-3 bg-[color:var(--accent-warning)]/10 rounded-[var(--radius-sm)]">
+                          <div className="font-semibold text-[color:var(--accent-warning)] mb-1">2 - Developing</div>
+                          <p className="body-sm text-[color:var(--text-secondary)]">Shows progress but needs continued development</p>
+                        </div>
+                        <div className="p-3 bg-[color:var(--text-muted)]/10 rounded-[var(--radius-sm)]">
+                          <div className="font-semibold text-[color:var(--text-primary)] mb-1">3 - Solid</div>
+                          <p className="body-sm text-[color:var(--text-secondary)]">Meets expectations and performs competently</p>
+                        </div>
+                        <div className="p-3 bg-[color:var(--brand)]/10 rounded-[var(--radius-sm)]">
+                          <div className="font-semibold text-[color:var(--brand)] mb-1">4 - Strong</div>
+                          <p className="body-sm text-[color:var(--text-secondary)]">Indicates proficiency and competence in the area</p>
+                        </div>
+                        <div className="p-3 bg-[color:var(--accent-success)]/10 rounded-[var(--radius-sm)]">
+                          <div className="font-semibold text-[color:var(--accent-success)] mb-1">5 - Excellent</div>
+                          <p className="body-sm text-[color:var(--text-secondary)]">Signifies a high level of expertise and consistent high performance</p>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
                 </div>
                 
                 <div className="space-y-6">
@@ -438,7 +469,8 @@ function EvaluationForm() {
                     return (
                       <Card key={competency.key} className="card" data-testid={`competency-${competency.key}-card`}>
                         <div className="card__body">
-                          <div className="grid md:grid-cols-12 gap-4 items-start">
+                          <div className="grid md:grid-cols-12 gap-6 items-start">
+                            {/* Competency Info */}
                             <div className="md:col-span-3">
                               <h4 className="h4 mb-2">{competency.name}</h4>
                               {rubricCompetency && (
@@ -448,7 +480,8 @@ function EvaluationForm() {
                               )}
                             </div>
                             
-                            <div className="md:col-span-4 space-y-3">
+                            {/* Rating Section */}
+                            <div className="md:col-span-4 space-y-4">
                               <div>
                                 <Label className="label mb-3">Score: {competency.score}/5</Label>
                                 <div className="flex items-center gap-4">
@@ -476,15 +509,21 @@ function EvaluationForm() {
                                 </div>
                               </div>
                               
+                              {/* Dynamic Rubric Criteria Display */}
                               {rubricCompetency && (
-                                <div className="p-3 bg-[color:var(--bg-section)] rounded-[var(--radius-sm)]">
-                                  <p className="body-sm">
-                                    <strong>
-                                      {competency.score === 5 ? 'Excellent: ' :
-                                       competency.score === 4 ? 'Strong: ' :
-                                       competency.score === 3 ? 'Solid: ' :
-                                       competency.score === 2 ? 'Developing: ' : 'Concerning: '}
+                                <div className="p-4 bg-[color:var(--bg-section)] rounded-[var(--radius-sm)] border-l-4 border-[var(--brand)]">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="w-6 h-6 rounded-full bg-[var(--brand)] text-white text-xs flex items-center justify-center font-semibold">
+                                      {competency.score}
+                                    </span>
+                                    <strong className="body-sm text-[color:var(--brand)]">
+                                      {competency.score === 5 ? 'Excellent' :
+                                       competency.score === 4 ? 'Strong' :
+                                       competency.score === 3 ? 'Solid' :
+                                       competency.score === 2 ? 'Developing' : 'Concerning'}
                                     </strong>
+                                  </div>
+                                  <p className="body-sm text-[color:var(--text-secondary)]">
                                     {competency.score === 5 ? rubricCompetency.criteria.excellent :
                                      competency.score === 4 ? rubricCompetency.criteria.strong :
                                      competency.score === 3 ? rubricCompetency.criteria.solid :
@@ -495,15 +534,26 @@ function EvaluationForm() {
                               )}
                             </div>
                             
+                            {/* Evidence Section */}
                             <div className="md:col-span-5">
                               <Label className="label">Evidence & Examples</Label>
                               <Textarea
                                 value={competency.evidence || ""}
                                 onChange={(e) => updateCompetencyEvidence(index, e.target.value)}
                                 data-testid={`competency-${competency.key}-evidence`}
-                                className="input min-h-[120px]"
-                                placeholder="Provide specific examples and evidence supporting this rating..."
+                                className="input min-h-[140px]"
+                                placeholder="Provide specific examples that demonstrate this competency level:
+• What actions did you take?
+• What was the impact or outcome?
+• How did this demonstrate the competency?
+
+Example: 'Led implementation of new AWS Glue data pipeline that reduced processing time by 40%, demonstrating initiative in learning new technology and driving results for the client.'"
                               />
+                              {competency.evidence && competency.evidence.length > 500 && (
+                                <p className="text-xs text-[color:var(--text-muted)] mt-1">
+                                  {competency.evidence.length} characters (detailed evidence provided)
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>
