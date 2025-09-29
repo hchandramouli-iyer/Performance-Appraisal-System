@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import CompetencyRadarChart from "@/components/CompetencyRadarChart";
 import { ArrowLeft, Brain, Save, FileText, Clock, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
