@@ -1,19 +1,15 @@
 [
   {
-    "content": "Install required frontend dependencies (recharts, framer-motion, lucide-react)",
+    "content": "Create backend domain models (Pydantic models for mentees, cycles, evaluations, etc.)",
     "status": "completed"
   },
   {
-    "content": "Create backend domain models (Pydantic models for mentees, cycles, evaluations, etc.)",
-    "status": "in_progress"
-  },
-  {
     "content": "Implement core backend API endpoints for mentees and cycles",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Create frontend app shell with routing and navigation",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Build mentee management dashboard with table and CRUD operations",
